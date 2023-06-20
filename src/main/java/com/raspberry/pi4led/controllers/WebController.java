@@ -52,6 +52,7 @@ public class WebController {
                             emitter.send(eventBuilder);
                             stationModel.getReceivedMessage().clear();
                         }
+                        stationModel.setFirst(true);
                     }
                     var eventBuilder = SseEmitter.event();
                     stationModel.setState(State.READY);

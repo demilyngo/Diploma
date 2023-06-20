@@ -184,7 +184,6 @@ public class StationModel {
                 wagonModel newWagon = new wagonModel(trainCounter, cities.get(0), 0);
                 wagonList.add(newWagon);
                 if(isFirst) {
-                    isFirst = false;
                     trainCounter--;
                 }
             } else if (this.state == State.SORTING) {
