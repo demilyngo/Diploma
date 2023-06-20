@@ -101,12 +101,13 @@ public class WebController {
                     }
                     eventBuilder = SseEmitter.event();
                     eventBuilder.id("2").data(stationModel.getCurrentWay()).build();
+                    emitter.send(eventBuilder);
 
                 }
                 stationModel.sendMessage(49);
                 var eventBuilder = SseEmitter.event();
                 stationModel.setState(State.SORTED);
-                eventBuilder.id("2").data("Done sorting").build();
+                eventBuilder.id("3").data("Done sorting").build();
                 emitter.send(eventBuilder);
             } catch (Exception e) {
                 emitter.completeWithError(e);
