@@ -178,7 +178,7 @@ public class StationModel {
 //            return;
 //        }
 
-        else if (convertReceived(receivedMessage) == 19 && !isFirst) { //counter at the start
+        else if (convertReceived(receivedMessage) == 19) { //counter at the start
             if (this.state == State.COMING) {
                 trainCounter++;
                 wagonModel newWagon = new wagonModel(trainCounter, cities.get(0), 0);
