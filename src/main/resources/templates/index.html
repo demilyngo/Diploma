@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Diploma</title>
+    <link rel="stylesheet" href="/styles/index.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
+    <script
+            src="https://code.jquery.com/jquery-3.6.4.min.js"
+            integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css"/>
+</head>
+<body>
+<div class="wrapper" th:each="station : ${station}">
+    <header class="mainHeader" th:text="${station.getNameOfStation()}">Станция Сургутская</header>
+
+    <div class="mainContent" >
+        <div class="leftSide">
+            <img src="../images/SurSU_logo.jpg" alt="Логотип СурГУ">
+            <p class="state" th:text="'Состояние: ' + ${station.getState().displayValue}"></p>
+            <form id="form">
+                <div class="wagons">
+                    <div id="overlay" style="display: none"></div>
+                    <div class="firstRow">
+                        <p>Вагон</p>
+                        <p>Пункт назначения</p>
+                        <p>Тип груза</p>
+                    </div>
+                    <div class="wagonItems">
+                        <div class="wagonItem" th:each="wagon : ${wagonList}">
+                            <div class="wagonNumber">
+                                <p th:text="${wagon.getIndex() + 1}"/>
+                            </div>
+                            <select class="selectWagon" th:name="'wagon'">
+                                <option th:value="${wagon.getWayIndex()}" th:text="${wagon.getWhere()}"></option>
+                                <option th:each="city : ${cities}" th:if="${not (wagon.getWhere() eq city)}"
+                                        th:text="${city}" th:value="${cities.indexOf(city)}"></option>
+                            </select>
+
+                            <input type="checkbox" class="type"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="rightSide">
+            <div class="topRight">
+                <p class="sortCounter">Ожидают сортировку: <span id="toSortCounter" th:text="${station.getTrainCounter()}"></span></p>
+                <img class="map" th:src="'../images/Map_' + ${station.getCurrentWay()} + '.png'" alt="Тут должна быть карта" width="1080">
+                <div class="cities">
+                    <p class="city">Депо</p>
+                    <p class="city" th:each="city : ${cities}">
+                        <span th:text="${city} + ': '"></span>
+                        <span th:id="${city}" th:text="${counters.get(cities.indexOf(city))}"></span>
+                    </p>
+                </div>
+            </div>
+            <div class="bottomRight">
+                <div class="mainButtons">
+                    <button id="waitButton"
+                            th:style="${station.getState().displayValue == 'Ожидание' ? 'display:block' : 'display:none'}">
+                        Ожидание
+                    </button>
+                    <button id="startButton"
+                            th:style="${station.getState().displayValue == 'Готово к сортировке' ? 'display:block' : 'display:none'}">
+                        Начать сортировку
+                    </button>
+                    <a href="restart">
+                        <button id="restartButton"
+                                th:style="${station.getState().displayValue == 'Отсортировано' ? 'display:block' : 'display:none'}">
+                            Сброс
+                        </button>
+                    </a>
+                </div>
+<!--                <button id="alarmButton" style="background-color: orangered">Авария</button>-->
+                <p th:text="${station.getControl().displayValue}"></p>
+            </div>
+        </div>
+    </div>
+    <p id="result"></p>
+    <!-- Скрытый блок модального окна -->
+    <div id="ex1" class="modal" style="z-index: 3">
+        <h2>Ошибка</h2>
+        <p id="controllerError">Пример ошибки</p>
+    </div>
+    <p style="display: none"><a href="#ex1" class="modal-click">Open Modal</a></p>
+</div>
+<script type="text/javascript" src="/scripts/scripts.js"></script>
+</body>
+</html>
