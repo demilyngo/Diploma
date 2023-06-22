@@ -28,7 +28,7 @@ public class StationModel {
     private State state;
     private Control control;
     private int trainCounter;
-    private boolean isFirst = true;
+    private boolean isFirstInBack = true;
 
     private int currentWay = 8;
     private String nameOfStation;
@@ -179,7 +179,7 @@ public class StationModel {
 //        }
 
         else if (convertReceived(receivedMessage) == 19) { //counter at the start
-            if (this.state == State.COMING && !isFirst) {
+            if (this.state == State.COMING && !isFirstInBack) {
                 trainCounter++;
                 wagonModel newWagon = new wagonModel(trainCounter, cities.get(0), 0);
                 wagonList.add(newWagon);
@@ -187,7 +187,7 @@ public class StationModel {
                 trainCounter--;
                 wagonList.remove(trainCounter);
             }
-            isFirst = false;
+            isFirstInBack = false;
         }
 
         //reaction on messages

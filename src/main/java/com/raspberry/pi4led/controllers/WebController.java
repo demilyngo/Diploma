@@ -18,6 +18,7 @@ import java.util.concurrent.Executors;
 public class WebController {
     private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
     final StationModel stationModel = new StationModel(State.WAITING, Control.FIELD, "Сургутская");
+    private boolean isFirstInWeb = true;
 
 
     @GetMapping("/")
@@ -46,13 +47,17 @@ public class WebController {
                 try {
                     stationModel.sendMessage(15); //moving to position for sorting
                     while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 21) {
-                        if (stationModel.convertReceived(stationModel.getReceivedMessage()) == 19 && !stationModel.isFirst()) {
-                            var eventBuilder = SseEmitter.event();
-                            eventBuilder.id("1").data(stationModel.getCities().get(0));
-                            emitter.send(eventBuilder);
-                            stationModel.getReceivedMessage().clear();
-                            continue;
+                        if (stationModel.convertReceived(stationModel.getReceivedMessage()) == 19) {
+                            if(!isFirstInWeb) {
+                                var eventBuilder = SseEmitter.event();
+                                eventBuilder.id("1").data(stationModel.getCities().get(0));
+                                emitter.send(eventBuilder);
+                                stationModel.getReceivedMessage().clear();
+                                continue;
+                            }
+                            isFirstInWeb = false;
                         }
+
                     }
                     var eventBuilder = SseEmitter.event();
                     stationModel.setState(State.READY);
@@ -103,7 +108,6 @@ public class WebController {
                     eventBuilder = SseEmitter.event();
                     eventBuilder.id("2").data(stationModel.getCurrentWay()).build();
                     emitter.send(eventBuilder);
-
                 }
                 stationModel.sendMessage(49);
                 var eventBuilder = SseEmitter.event();
