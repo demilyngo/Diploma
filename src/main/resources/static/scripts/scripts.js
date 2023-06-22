@@ -55,9 +55,9 @@ $("#waitButton").click(function (e) {
                             "                        <input type=\"checkbox\" class=\"type\"/>\n" +
                             "                    </div>";
                         document.querySelector(".wagonItems").innerHTML += template;
+                        $("#toSortCounter").text(toSortCounter);
                     }
                     toSortCounter+=1;
-                    $("#toSortCounter").text(toSortCounter);
                     break;
 
                 case "2":
