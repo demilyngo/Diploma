@@ -112,9 +112,9 @@ $("#startButton").click(function(e) {
             console.log('id: ' + event.lastEventId + ', data: ' + event.data);
             switch (event.lastEventId) {
                 case "1":
+                    document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
                     toSortCounter -= 1;
                     $("#toSortCounter").text(toSortCounter);
-                    document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
                     $(".map").attr("src", "../images/Map_" + event.data + ".png");
                     break;
                 case "2":
@@ -124,6 +124,7 @@ $("#startButton").click(function(e) {
                 case "3":
                     $(".state").text("Состояние: Отсортировано");
                     document.querySelector("#restartButton").style.display = "block";
+                    $(".map").attr("src", "../images/Map_8.png");
                     eventSource.close();
                     console.log('connection is closed');
                     break;

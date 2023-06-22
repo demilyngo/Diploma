@@ -107,6 +107,7 @@ public class WebController {
                     emitter.send(eventBuilder);
                 }
                 stationModel.sendMessage(49);
+                stationModel.sendMessage(17);
                 var eventBuilder = SseEmitter.event();
                 stationModel.setState(State.SORTED);
                 eventBuilder.id("3").data("Done sorting").build();
