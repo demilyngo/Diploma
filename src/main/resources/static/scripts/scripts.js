@@ -38,24 +38,26 @@ $("#waitButton").click(function (e) {
             console.log('id: ' + event.lastEventId + ', data: ' + event.data);
             switch (event.lastEventId ) {
                 case "1":
+                    if(toSortCounter > 0) {
+                        let template = " " +
+                            "                    <div class=\"wagonItem\" id=\"wagonItem" + toSortCounter + "\">\n" +
+                            "                        <div class=\"wagonNumber\">\n" +
+                            "                            <p>" + toSortCounter + "</p>\n" +
+                            "                        </div>\n" +
+                            "                        <select class=\"selectWagon\" name=\"wagon\">\n" +
+                            "                            <option value=\"" + cities.indexOf(event.data) + "\">" + event.data + "</option>\n"
+                        cities.forEach(element => {
+                            if (element !== event.data)
+                                template += "                            <option value=\"" + cities.indexOf(element) + "\">" + element + "</option>\n";
+                        })
+                        template += "                        </select>\n" +
+                            "\n" +
+                            "                        <input type=\"checkbox\" class=\"type\"/>\n" +
+                            "                    </div>";
+                        document.querySelector(".wagonItems").innerHTML += template;
+                    }
                     toSortCounter+=1;
                     $("#toSortCounter").text(toSortCounter);
-                    let template = " " +
-                        "                    <div class=\"wagonItem\" id=\"wagonItem" + toSortCounter + "\">\n" +
-                        "                        <div class=\"wagonNumber\">\n" +
-                        "                            <p>" + toSortCounter + "</p>\n" +
-                        "                        </div>\n" +
-                        "                        <select class=\"selectWagon\" name=\"wagon\">\n" +
-                        "                            <option value=\"" + cities.indexOf(event.data) + "\">" + event.data + "</option>\n"
-                    cities.forEach(element => {
-                        if(element !== event.data)
-                            template += "                            <option value=\"" + cities.indexOf(element) + "\">" + element + "</option>\n";
-                    })
-                    template += "                        </select>\n" +
-                        "\n" +
-                        "                        <input type=\"checkbox\" class=\"type\"/>\n" +
-                        "                    </div>";
-                    document.querySelector(".wagonItems").innerHTML += template;
                     break;
 
                 case "2":

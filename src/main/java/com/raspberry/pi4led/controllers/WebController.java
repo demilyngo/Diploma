@@ -18,7 +18,6 @@ import java.util.concurrent.Executors;
 public class WebController {
     private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
     final StationModel stationModel = new StationModel(State.WAITING, Control.FIELD, "Сургутская");
-    private boolean isFirstInWeb = true;
 
 
     @GetMapping("/")
@@ -48,14 +47,11 @@ public class WebController {
                     stationModel.sendMessage(15); //moving to position for sorting
                     while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 21) {
                         if (stationModel.convertReceived(stationModel.getReceivedMessage()) == 19) {
-                            if(!isFirstInWeb) {
-                                var eventBuilder = SseEmitter.event();
-                                eventBuilder.id("1").data(stationModel.getCities().get(0));
-                                emitter.send(eventBuilder);
-                                stationModel.getReceivedMessage().clear();
-                                continue;
-                            }
-                            isFirstInWeb = false;
+                            var eventBuilder = SseEmitter.event();
+                            eventBuilder.id("1").data(stationModel.getCities().get(0));
+                            emitter.send(eventBuilder);
+                            stationModel.getReceivedMessage().clear();
+                            continue;
                         }
 
                     }
@@ -125,7 +121,6 @@ public class WebController {
     public String restartSystem() {
         stationModel.setErrorId(0);
         stationModel.setFirstInBack(true);
-        isFirstInWeb = true;
         stationModel.setState(State.WAITING);
         stationModel.setTrainCounter(0);
         stationModel.getWagonList().clear();
