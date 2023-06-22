@@ -111,9 +111,9 @@ $("#startButton").click(function(e) {
             console.log('id: ' + event.lastEventId + ', data: ' + event.data);
             switch (event.lastEventId) {
                 case "1":
-                    document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
                     toSortCounter -= 1;
                     $("#toSortCounter").text(toSortCounter);
+                    document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
                     $(".map").attr("src", "../images/Map_" + event.data + ".png");
                     break;
                 case "2":
