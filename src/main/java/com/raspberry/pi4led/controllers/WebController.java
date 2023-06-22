@@ -124,7 +124,8 @@ public class WebController {
     @GetMapping("/restart")
     public String restartSystem() {
         stationModel.setErrorId(0);
-        stationModel.setFirst(true);
+        stationModel.setFirstInBack(true);
+        isFirstInWeb = true;
         stationModel.setState(State.WAITING);
         stationModel.setTrainCounter(0);
         stationModel.getWagonList().clear();
