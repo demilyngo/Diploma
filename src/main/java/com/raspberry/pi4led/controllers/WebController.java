@@ -46,15 +46,12 @@ public class WebController {
                 try {
                     stationModel.sendMessage(15); //moving to position for sorting
                     while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 21) {
-                        if (stationModel.convertReceived(stationModel.getReceivedMessage()) == 19) {
-                            if(!stationModel.isFirst()) {
-                                var eventBuilder = SseEmitter.event();
-                                eventBuilder.id("1").data(stationModel.getCities().get(0));
-                                emitter.send(eventBuilder);
-                                stationModel.getReceivedMessage().clear();
-                                continue;
-                            }
-                            stationModel.setFirst(false);
+                        if (stationModel.convertReceived(stationModel.getReceivedMessage()) == 19 && !stationModel.isFirst()) {
+                            var eventBuilder = SseEmitter.event();
+                            eventBuilder.id("1").data(stationModel.getCities().get(0));
+                            emitter.send(eventBuilder);
+                            stationModel.getReceivedMessage().clear();
+                            continue;
                         }
                     }
                     var eventBuilder = SseEmitter.event();

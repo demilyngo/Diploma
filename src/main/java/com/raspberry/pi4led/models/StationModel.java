@@ -187,6 +187,7 @@ public class StationModel {
                 trainCounter--;
                 wagonList.remove(trainCounter);
             }
+            isFirst = false;
         }
 
         //reaction on messages
