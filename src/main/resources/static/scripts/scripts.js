@@ -90,6 +90,7 @@ $("#startButton").click(function(e) {
     document.querySelector("#overlay").style.display = "block";
     e.preventDefault();
     order = checkOrder();
+    toSortCounter--;
 
     $(".state").text("Состояние: Сортировка");
     var wagonList = document.querySelectorAll(".selectWagon");

@@ -76,6 +76,7 @@ public class WebController {
     @GetMapping(path = "/start", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
     public SseEmitter startSorting(@RequestParam(value = "order", defaultValue = "0") String order) {
+        System.out.println(stationModel.getTrainCounter());
         SseEmitter emitter = new SseEmitter(-1L);
         cachedThreadPool.execute(() -> {
             stationModel.setState(State.SORTING);
