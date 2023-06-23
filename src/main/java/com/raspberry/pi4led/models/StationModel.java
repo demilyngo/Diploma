@@ -186,6 +186,9 @@ public class StationModel {
             } else if (this.state == State.SORTING) {
                 trainCounter--;
                 wagonList.remove(trainCounter);
+                if (trainCounter == 0) {
+                    state = State.SORTED;
+                }
             }
             isFirst = false;
         }
