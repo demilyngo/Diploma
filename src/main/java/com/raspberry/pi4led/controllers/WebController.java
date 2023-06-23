@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -85,22 +84,23 @@ public class WebController {
             try {
                 for(char way : order.toCharArray()) {
                     stationModel.setCurrentWay(Character.getNumericValue(way)+1);
-
                     var eventBuilder = SseEmitter.event();
-                    eventBuilder.id("1").data(stationModel.getCurrentWay()).build();
-                    emitter.send(eventBuilder);
 
                     int msgToSemaphore = 33 + (2 * stationModel.getCurrentWay());
                     int msgToArrows = 1 + (2 * stationModel.getCurrentWay());
+                    int msgToReceive = 65+(2 * stationModel.getCurrentWay());
 
                     if (stationModel.getErrorId() != 0) {
                         eventBuilder.id("4").data(stationModel.getErrorId()); //to open modal with error
                         emitter.send(eventBuilder);
                         break;
                     }
-                    int msgToReceive = 65+(2 * stationModel.getCurrentWay());
+
                     stationModel.sendMessage(msgToSemaphore); //message to change semaphores
                     stationModel.sendMessage(msgToArrows); //message to change arrows
+
+                    eventBuilder.id("1").data(stationModel.getCurrentWay()).build();
+                    emitter.send(eventBuilder);
                     while(stationModel.convertReceived(stationModel.getReceivedMessage())!=msgToReceive) {
                         Thread.onSpinWait();
                     }
@@ -121,10 +121,38 @@ public class WebController {
         return emitter;
     }
 
+    @ResponseBody
+    @GetMapping(path = "/field", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter emergency() {
+        SseEmitter emitter = new SseEmitter(-1L);
+        cachedThreadPool.execute(() -> {
+            while(true) {
+                if(stationModel.convertReceived(stationModel.getReceivedMessage()) == 115) {
+                    var eventBuilder = SseEmitter.event();
+                    eventBuilder.id(stationModel.getState() == State.EMERGENCY ? "2" : "1").data("Emergency toggle").build();
+                    try {
+                        emitter.send(eventBuilder);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115) {
+                    var eventBuilder = SseEmitter.event();
+                    eventBuilder.id("3").data("Field control").build();
+                    try {
+                        emitter.send(eventBuilder);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        return emitter;
+    }
+
     @GetMapping("/restart")
     public String restartSystem() {
         stationModel.setErrorId(0);
-        stationModel.setFirstInBack(true);
+        stationModel.setFirst(true);
         stationModel.setState(State.WAITING);
         stationModel.setTrainCounter(0);
         stationModel.getWagonList().clear();

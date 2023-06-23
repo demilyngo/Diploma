@@ -26,9 +26,10 @@ public class StationModel {
     private Integer errorId = 0;
 
     private State state;
+    private State stateBeforeEmergency;
     private Control control;
     private int trainCounter;
-    private boolean isFirstInBack = true;
+    private boolean isFirst = true;
 
     private int currentWay = 8;
     private String nameOfStation;
@@ -171,7 +172,6 @@ public class StationModel {
 
         if (convertReceived(receivedMessage) == checkControllerMessage) { //controller is connected
             System.out.println("Checked successfully");
-            return;
         }
 //        if (errors.contains(convertReceived(receivedMessage))) { //errors handler
 //            errorId = executionErrorIds.get(checkControllerMessages.indexOf(checkControllerMessage));
@@ -179,7 +179,7 @@ public class StationModel {
 //        }
 
         else if (convertReceived(receivedMessage) == 19) { //counter at the start
-            if (this.state == State.COMING && !isFirstInBack) {
+            if (this.state == State.COMING && !isFirst) {
                 trainCounter++;
                 wagonModel newWagon = new wagonModel(trainCounter, cities.get(0), 0);
                 wagonList.add(newWagon);
@@ -187,49 +187,107 @@ public class StationModel {
                 trainCounter--;
                 wagonList.remove(trainCounter);
             }
-            isFirstInBack = false;
+            isFirst = false;
+        }
+
+        else if (convertReceived(receivedMessage) == 21) {
+            if(this.state == State.COMING) {
+                this.state = State.READY;
+            }
         }
 
         //reaction on messages
         else if (!receivedMessage.get(0) && receivedMessage.get(2)) {
             if (this.state == State.SORTING && convertReceived(receivedMessage) == 63 + 2 * currentWay) {
                 counters.set(currentWay - 1, counters.get(currentWay - 1) + 1); // counters at the ends
-            } else if (getControl() == Control.FIELD) {
+            } else if (receivedMessage.get(1)){
                 switch (convertReceived(receivedMessage)) {
                     case 99 -> {
-                        sendMessage(35); //semaphore way 1
-                        sendMessage(3); //rails way 1
-                        currentWay = 1;
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                            sendMessage(35); //semaphore way 1
+                            sendMessage(3); //rails way 1
+                            currentWay = 1;
+                            state = State.SORTING;
+                        } else if (control == Control.SERVER) {
+                            control = Control.FIELD;
+                        }
                     }
                     case 101 -> {
-                        sendMessage(37); //semaphore way 2
-                        sendMessage(5); //rails way 2
-                        currentWay = 2;
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                            sendMessage(37); //semaphore way 2
+                            sendMessage(5); //rails way 2
+                            currentWay = 2;
+                            state = State.SORTING;
+                        } else if (control == Control.SERVER) {
+                            control = Control.FIELD;
+                        }
                     }
                     case 103 -> {
-                        sendMessage(39); //semaphore way 3
-                        sendMessage(7); //rails way 3
-                        currentWay = 3;
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                            sendMessage(39); //semaphore way 3
+                            sendMessage(7); //rails way 3
+                            currentWay = 3;
+                            state = State.SORTING;
+                        } else if (control == Control.SERVER) {
+                            control = Control.FIELD;
+                        }
                     }
                     case 105 -> {
-                        sendMessage(41); //semaphore way 4
-                        sendMessage(9); //rails way 4
-                        currentWay = 4;
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                            sendMessage(41); //semaphore way 4
+                            sendMessage(9); //rails way 4
+                            currentWay = 4;
+                            state = State.SORTING;
+                        } else if (control == Control.SERVER) {
+                            control = Control.FIELD;
+                        }
                     }
                     case 107 -> {
-                        sendMessage(43); //semaphore way 5
-                        sendMessage(11); //rails way 5
-                        currentWay = 5;
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                            sendMessage(43); //semaphore way 5
+                            sendMessage(11); //rails way 5
+                            currentWay = 5;
+                            state = State.SORTING;
+                        } else if (control == Control.SERVER) {
+                            control = Control.FIELD;
+                        }
                     }
                     case 109 -> {
-                        sendMessage(45); //semaphore way 6
-                        sendMessage(13); //rails way 6
-                        currentWay = 6;
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                            sendMessage(45); //semaphore way 6
+                            sendMessage(13); //rails way 6
+                            currentWay = 6;
+                            state = State.SORTING;
+                        } else if (control == Control.SERVER) {
+                            control = Control.FIELD;
+                        }
+                    }
+                    case 111 -> {
+                        if(state == State.WAITING && control == Control.FIELD) {
+                            sendMessage(15);
+                            state = State.COMING;
+                        } else if (control == Control.SERVER) {
+                            control = Control.FIELD;
+                        }
                     }
                     case 113 -> {
-                        sendMessage(47); //semaphore to depot
-                        sendMessage(17); //rails to depot
-                        currentWay = 8;
+                        if(state == State.SORTED && control == Control.FIELD) {
+                            sendMessage(49); //semaphore to depot
+                            sendMessage(17); //rails to depot
+                            currentWay = 8;
+                            state = State.LEAVING;
+                        } else if (control == Control.SERVER) {
+                            control = Control.FIELD;
+                        }
+                    }
+                    case 115 -> {
+                        if(state != State.EMERGENCY) {
+                            stateBeforeEmergency = state;
+                            state = State.EMERGENCY;
+                            control = Control.FIELD;
+                        } else {
+                            state = stateBeforeEmergency;
+                        }
                     }
                 }
             }

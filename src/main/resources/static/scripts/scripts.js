@@ -145,6 +145,43 @@ $("#startButton").click(function(e) {
     }
 })
 
+function onload() {
+    if (window.EventSource == null) {
+        alert('The browser does not support Server-Sent Events');
+    } else {
+        console.log(order);
+        var eventSource = new EventSource('/field');
+        eventSource.onopen = function () {
+            console.log('connection is established');
+        };
+        eventSource.onerror = function (error) {
+            console.log('connection state: ' + eventSource.readyState + ', error: ' + error);
+        };
+        eventSource.onmessage = function (event) {
+            console.log('id: ' + event.lastEventId + ', data: ' + event.data);
+            switch (event.lastEventId) {
+                case "1":
+                    $("#control").text("Управление по месту");
+                    var prevState = $(".state").text();
+                    $(".state").text("Состояние: Авария");
+                    $("#controllerError").text("Авария. Ожидайте устранения неполадок.");
+                    document.querySelector(".bottomRight").style.display = "none"
+                    $(".modal-click").modal({fadeDuration: 250});
+                    break;
+                case "2":
+                    document.querySelector(".bottomRight").style.display = "block";
+                    $(".state").text(prevState);
+                    break;
+                case "3":
+                    $("#control").text("Управление по месту");
+                    document.querySelector(".bottomRight").style.display = "none"
+                    break;
+            }
+        };
+    }
+};
+onload();
+
 // $("#restartButton").click(function(e) {
 //     document.querySelector(".wagonItems").innerHTML = "";
 //     $("#toSortCounter").text(0);

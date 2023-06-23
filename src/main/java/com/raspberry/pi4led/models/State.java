@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public
 enum State {
+    EMERGENCY("Авария"),
     WAITING("Ожидание"),
     COMING("Прибытие"),
     READY("Готово к сортировке"),
