@@ -132,7 +132,7 @@ public class WebController {
             stationModel.getCounters().set(i, 0);
         }
         stationModel.setCurrentWay(8);
-        if(stationModel.getThreadListener().isAlive()) {
+        if(!stationModel.getThreadListener().isAlive()) {
             stationModel.getThreadListener().start();
         }
         return "redirect:/";
