@@ -248,14 +248,14 @@ public class StationModel {
             e.printStackTrace();
         }
 
-        while (true) {
+        while (state != State.SORTED) {
             try {
                 if(state == State.COMING) {
                     checkControllerMessage = checkControllerMessages.get(0);
                     isBusy = true;
                     sendMessage(checkControllerMessage);
                     isBusy = false;
-                    Thread.sleep(500);
+//                    Thread.sleep(500);
                     long delay = System.currentTimeMillis();
                     while (true) {
                         if (System.currentTimeMillis()-delay >= 50) {
@@ -278,11 +278,10 @@ public class StationModel {
                                 break;
                             }
                         }
-
+                        if(state == State.SORTED) {
+                            break;
+                        }
                     }
-//                    if (connectionErrorIds.contains(errorId)) {
-//                        break;
-//                    }
                     while (isTryingToLoadPage) {
                         Thread.onSpinWait();
                     }
