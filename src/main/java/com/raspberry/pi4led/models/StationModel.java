@@ -248,7 +248,7 @@ public class StationModel {
             e.printStackTrace();
         }
 
-        while (state != State.SORTED) {
+        while (true) {
             try {
                 if(state == State.COMING) {
                     checkControllerMessage = checkControllerMessages.get(0);
@@ -277,9 +277,6 @@ public class StationModel {
                             if (System.currentTimeMillis() - delay >= 50) {
                                 break;
                             }
-                        }
-                        if(state == State.SORTED) {
-                            break;
                         }
                     }
                     while (isTryingToLoadPage) {
