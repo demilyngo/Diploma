@@ -31,8 +31,9 @@ public class WebController {
         model.addAttribute("cities", stationModel.getCities());
         model.addAttribute("counters", stationModel.getCounters());
         model.addAttribute("wagonList", stationModel.getWagonList());
-        stationModel.setTryingToLoadPage(false);
         stationModel.sendMessage(49);
+        stationModel.sendMessage(17);
+        stationModel.setTryingToLoadPage(false);
         return "index";
     }
 
