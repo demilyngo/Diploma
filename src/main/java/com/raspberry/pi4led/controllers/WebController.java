@@ -22,10 +22,11 @@ public class WebController {
 
     @GetMapping("/")
     public String greeting(Model model) throws InterruptedException {
+        stationModel.setTryingToLoadPage(true);
         while(stationModel.isBusy()) {
             Thread.onSpinWait();
         }
-        stationModel.setTryingToLoadPage(true);
+
         model.addAttribute("station", stationModel);
         model.addAttribute("cities", stationModel.getCities());
         model.addAttribute("counters", stationModel.getCounters());
