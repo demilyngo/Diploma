@@ -121,8 +121,7 @@ public class StationModel {
                 receiveMessage();
             }
             j++;
-        } while(j != 5
-                && convertReceived(receivedMessage) == 0
+        } while(convertReceived(receivedMessage) == 0
                 && !isFalseMessage);
 //        if (j == 5) {
 //            errorId = connectionErrorIds.get(checkControllerMessages.indexOf(checkControllerMessage));
@@ -265,7 +264,7 @@ public class StationModel {
                         }
                     }
                     case 113 -> {
-                        if(state == State.SORTED && control == Control.FIELD) {
+                        if((state == State.SORTED || state == State.WAITING) && control == Control.FIELD) {
                             sendMessage(49); //semaphore to depot
                             sendMessage(17); //rails to depot
                             currentWay = 8;
