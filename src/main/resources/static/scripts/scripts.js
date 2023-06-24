@@ -145,19 +145,19 @@ $("#startButton").click(function(e) {
     }
 })
 
-function onload() {
+$(document).ready(function () {
     if (window.EventSource == null) {
         alert('The browser does not support Server-Sent Events');
     } else {
         console.log(order);
-        var eventSource = new EventSource('/field');
-        eventSource.onopen = function () {
+        var eventSourceField = new EventSource('/field');
+        eventSourceField.onopen = function () {
             console.log('connection is established');
         };
-        eventSource.onerror = function (error) {
-            console.log('connection state: ' + eventSource.readyState + ', error: ' + error);
+        eventSourceField.onerror = function (error) {
+            console.log('connection state: ' + eventSourceField.readyState + ', error: ' + error);
         };
-        eventSource.onmessage = function (event) {
+        eventSourceField.onmessage = function (event) {
             console.log('id: ' + event.lastEventId + ', data: ' + event.data);
             switch (event.lastEventId) {
                 case "1":
@@ -180,8 +180,8 @@ function onload() {
             }
         };
     }
-};
-onload();
+});
+
 
 // $("#restartButton").click(function(e) {
 //     document.querySelector(".wagonItems").innerHTML = "";
