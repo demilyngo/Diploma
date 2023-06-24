@@ -316,6 +316,7 @@ public class StationModel {
                         }
                     }
                     while (isTryingToLoadPage) {
+                        System.out.println(1);
                         Thread.onSpinWait();
                     }
                 } else {
@@ -333,6 +334,7 @@ public class StationModel {
                         }
                     }
                     while (isTryingToLoadPage) {
+                        System.out.println(2);
                         Thread.onSpinWait();
                     }
                 }
