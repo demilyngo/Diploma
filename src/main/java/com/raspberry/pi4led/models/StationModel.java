@@ -101,16 +101,15 @@ public class StationModel {
             for (int i = 0; i!=messageLength; i++) {
                 while (true) {
                     if (System.currentTimeMillis() - frequencyTimer >= 30) {
+                        System.out.println(System.currentTimeMillis() - frequencyTimer);
                         frequencyTimer = System.currentTimeMillis();
                         if (messageBitSet.get(i)) {
                             pin.high();
-                            System.out.println(System.currentTimeMillis() - frequencyTimer);
                             System.out.println("Sent: " + messageBitSet.get(i));
 
                             break;
                         }
                         pin.low();
-                        System.out.println(System.currentTimeMillis() - frequencyTimer);
                         System.out.println("Sent: " + messageBitSet.get(i));
                         break;
                     }
@@ -147,6 +146,7 @@ public class StationModel {
         for (int i = 1; i != messageLength; i++) {
             while (true) {
                 if (frequencyTimer < System.currentTimeMillis() && System.currentTimeMillis() - frequencyTimer >= 30) {
+                    System.out.println(System.currentTimeMillis() - frequencyTimer);
                     frequencyTimer = System.currentTimeMillis();
                     if (pin.isLow()) {
                         receivedMessage.clear(i);
@@ -154,7 +154,6 @@ public class StationModel {
                         receivedMessage.set(i);
                     }
                     System.out.println("Received: " + receivedMessage.get(i));
-                    System.out.println(System.currentTimeMillis() - frequencyTimer);
                     break;
                 }
             }

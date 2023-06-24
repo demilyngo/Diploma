@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 
 @Controller
 public class WebController {
-    private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+    private final ExecutorService fixedThreadPool = Executors.newFixedThreadPool();
     final StationModel stationModel = new StationModel(State.WAITING, Control.SERVER, "Сургутская");
 
 
@@ -41,7 +41,7 @@ public class WebController {
     @GetMapping(path = "/wait", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter prepareForSorting()  {
         SseEmitter emitter = new SseEmitter(-1L);
-        cachedThreadPool.execute(() -> {
+        fixedThreadPool.execute(() -> {
             if(stationModel.getState() == State.WAITING) {
                 stationModel.setState(State.COMING);
                 //cached thread pool
@@ -80,7 +80,7 @@ public class WebController {
     public SseEmitter startSorting(@RequestParam(value = "order", defaultValue = "0") String order) {
         System.out.println(stationModel.getTrainCounter());
         SseEmitter emitter = new SseEmitter(-1L);
-        cachedThreadPool.execute(() -> {
+        fixedThreadPool.execute(() -> {
             stationModel.setState(State.SORTING);
             try {
                 for(char way : order.toCharArray()) {
@@ -126,7 +126,7 @@ public class WebController {
     @GetMapping(path = "/field", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter emergency() {
         SseEmitter emitter = new SseEmitter(-1L);
-        cachedThreadPool.execute(() -> {
+        fixedThreadPool.execute(() -> {
             while(true) {
                 if(stationModel.convertReceived(stationModel.getReceivedMessage()) == 115) {
                     var eventBuilder = SseEmitter.event();
