@@ -20,7 +20,7 @@ public class WebController {
 
 
     @GetMapping("/")
-    public String greeting(Model model) throws InterruptedException {
+    public synchronized String greeting(Model model) throws InterruptedException {
         stationModel.setTryingToLoadPage(true);
         while(stationModel.isBusy()) {
             Thread.onSpinWait();
@@ -39,7 +39,7 @@ public class WebController {
 
     @ResponseBody
     @GetMapping(path = "/wait", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter prepareForSorting()  {
+    public synchronized SseEmitter prepareForSorting()  {
         SseEmitter emitter = new SseEmitter(-1L);
         fixedThreadPool.execute(() -> {
             if(stationModel.getState() == State.WAITING) {
@@ -77,7 +77,7 @@ public class WebController {
 
     @GetMapping(path = "/start", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
-    public SseEmitter startSorting(@RequestParam(value = "order", defaultValue = "0") String order) {
+    public synchronized SseEmitter startSorting(@RequestParam(value = "order", defaultValue = "0") String order) {
         System.out.println(stationModel.getTrainCounter());
         SseEmitter emitter = new SseEmitter(-1L);
         fixedThreadPool.execute(() -> {
@@ -124,7 +124,7 @@ public class WebController {
 
     @ResponseBody
     @GetMapping(path = "/field", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter emergency() {
+    public synchronized SseEmitter emergency() {
         SseEmitter emitter = new SseEmitter(-1L);
         fixedThreadPool.execute(() -> {
             while(true) {
@@ -152,7 +152,7 @@ public class WebController {
     }
 
     @GetMapping("/restart")
-    public String restartSystem() {
+    public synchronized String restartSystem() {
         stationModel.setErrorId(0);
         stationModel.setFirst(true);
         stationModel.setState(State.WAITING);
