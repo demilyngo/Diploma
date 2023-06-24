@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 
 @Controller
 public class WebController {
-    private final ExecutorService fixedThreadPool = Executors.newFixedThreadPool();
+    private final ExecutorService fixedThreadPool = Executors.newFixedThreadPool(5);
     final StationModel stationModel = new StationModel(State.WAITING, Control.SERVER, "Сургутская");
 
 
