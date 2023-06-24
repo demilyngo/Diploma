@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 @Controller
 public class WebController {
     private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
-    final StationModel stationModel = new StationModel(State.WAITING, Control.FIELD, "Сургутская");
+    final StationModel stationModel = new StationModel(State.WAITING, Control.SERVER, "Сургутская");
 
 
     @GetMapping("/")
@@ -25,13 +25,14 @@ public class WebController {
         while(stationModel.isBusy()) {
             Thread.onSpinWait();
         }
-
         model.addAttribute("station", stationModel);
         model.addAttribute("cities", stationModel.getCities());
         model.addAttribute("counters", stationModel.getCounters());
         model.addAttribute("wagonList", stationModel.getWagonList());
-        stationModel.sendMessage(49);
-        stationModel.sendMessage(17);
+        if(stationModel.getState() == State.WAITING) {
+            stationModel.sendMessage(49);
+            stationModel.sendMessage(17);
+        }
         stationModel.setTryingToLoadPage(false);
         return "index";
     }
@@ -135,9 +136,10 @@ public class WebController {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115) {
+                } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97
+                        && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115) {
                     var eventBuilder = SseEmitter.event();
-                    eventBuilder.id("3").data("Field control").build();
+                    eventBuilder.id("3").data(stationModel.getCurrentWay()).build();
                     try {
                         emitter.send(eventBuilder);
                     } catch (IOException e) {

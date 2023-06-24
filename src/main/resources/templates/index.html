@@ -62,21 +62,24 @@
             <div class="bottomRight">
                 <div class="mainButtons">
                     <button id="waitButton"
-                            th:style="${station.getState().displayValue == 'Ожидание' ? 'display:block' : 'display:none'}">
+                            th:style="${station.getState().displayValue == 'Ожидание' ? 'display: block' : 'display: none'}">
                         Ожидание
                     </button>
                     <button id="startButton"
-                            th:style="${station.getState().displayValue == 'Готово к сортировке' ? 'display:block' : 'display:none'}">
+                            th:style="${station.getState().displayValue == 'Готово к сортировке' ? 'display: block' : 'display: none'}">
                         Начать сортировку
                     </button>
                     <a href="restart">
                         <button id="restartButton"
-                                th:style="${station.getState().displayValue == 'Отсортировано' ? 'display:block' : 'display:none'}">
+                                th:style="${station.getState().displayValue == 'Отсортировано' ? 'display: block' : 'display: none'}">
                             Сброс
                         </button>
                     </a>
                 </div>
 <!--                <button id="alarmButton" style="background-color: orangered">Авария</button>-->
+                <button id="takeControlButton"
+                        th:style="${station.getState().displayValue == 'Авария' ? 'display: block' : 'display: none'}">
+                </button>
                 <p th:text="${station.getControl().displayValue}" id="control"></p>
             </div>
         </div>

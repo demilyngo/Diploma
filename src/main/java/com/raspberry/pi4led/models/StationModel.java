@@ -8,9 +8,6 @@ import java.util.*;
 @Getter
 @Setter
 public class StationModel {
-    private boolean isBusy = false;
-    private boolean isTryingToLoadPage = false;
-
     private final int startBitLength = 1;
     private final int stopBitLength = 1;
     private final int controllerLength = 2;
@@ -29,10 +26,12 @@ public class StationModel {
     private State stateBeforeEmergency;
     private Control control;
     private int trainCounter;
-    private boolean isFirst = true;
-
     private int currentWay = 8;
     private String nameOfStation;
+
+    private boolean isFirst = true;
+    private boolean isBusy = false;
+    private boolean isTryingToLoadPage = false;
 
     boolean isSending, isReceiving, isFalseMessage;
     private BitSet receivedMessage = new BitSet(8);
@@ -50,7 +49,6 @@ public class StationModel {
             pin.setMode(PinMode.DIGITAL_INPUT);
         }
     }
-
     public void setOutput() {
         if (pin == null) {
             pin = gpioController.provisionDigitalMultipurposePin(RaspiPin.GPIO_01, PinMode.DIGITAL_OUTPUT);
@@ -59,7 +57,6 @@ public class StationModel {
             pin.setMode(PinMode.DIGITAL_OUTPUT);
         }
     }
-
     public BitSet convertToBitSet(Integer message) {
         BitSet resMessage = new BitSet(messageLength);
         int pos = 0;
@@ -131,20 +128,15 @@ public class StationModel {
 //            errorId = connectionErrorIds.get(checkControllerMessages.indexOf(checkControllerMessage));
 //        }
     }
-
-
     public void receiveMessage() throws InterruptedException {
         receivedMessage.clear();
         long startTime = System.currentTimeMillis();
         System.out.println("After stop bit: " + (long)(startTime - frequencyTimer));
         while (true) {
-            if(!pin.isHigh() || System.currentTimeMillis() - startTime > 1000) {
+            if(pin.isLow() || System.currentTimeMillis() - startTime > 1000) {
                 break;
             }
         }
-//        while (pin.isHigh() && System.currentTimeMillis() - startTime < 1000) { // wait for start bit
-//            Thread.onSpinWait();
-//        }
         if (pin.isHigh()) {
             return;
         }
@@ -169,7 +161,6 @@ public class StationModel {
             }
         }
         System.out.println("Whole message: " + convertReceived(receivedMessage));
-
         if (convertReceived(receivedMessage) == checkControllerMessage) { //controller is connected
             System.out.println("Checked successfully");
         }
@@ -203,7 +194,7 @@ public class StationModel {
         else if (!receivedMessage.get(0) && receivedMessage.get(2)) {
             if (this.state == State.SORTING && convertReceived(receivedMessage) == 63 + 2 * currentWay) {
                 counters.set(currentWay - 1, counters.get(currentWay - 1) + 1); // counters at the ends
-            } else if (receivedMessage.get(1)){
+            } else if (receivedMessage.get(1)) {
                 switch (convertReceived(receivedMessage)) {
                     case 99 -> {
                         if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {

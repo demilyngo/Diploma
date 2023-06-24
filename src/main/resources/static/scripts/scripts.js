@@ -165,16 +165,17 @@ function onload() {
                     var prevState = $(".state").text();
                     $(".state").text("Состояние: Авария");
                     $("#controllerError").text("Авария. Ожидайте устранения неполадок.");
-                    document.querySelector(".bottomRight").style.display = "none"
+                    document.querySelector(".mainButtons").style.display = "none"
                     $(".modal-click").modal({fadeDuration: 250});
                     break;
                 case "2":
-                    document.querySelector(".bottomRight").style.display = "block";
+                    document.querySelector(".mainButtons").style.display = "block";
                     $(".state").text(prevState);
                     break;
                 case "3":
                     $("#control").text("Управление по месту");
-                    document.querySelector(".bottomRight").style.display = "none"
+                    document.querySelector(".mainButtons").style.display = "none";
+                    $(".map").attr("src", "../images/Map_" + event.data + ".png");
                     break;
             }
         };
