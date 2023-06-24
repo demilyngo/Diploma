@@ -100,7 +100,6 @@ $("#startButton").click(function(e) {
     if (window.EventSource == null) {
         alert('The browser does not support Server-Sent Events');
     } else {
-        console.log(order);
         var eventSource = new EventSource('/start?' + order);
         eventSource.onopen = function () {
             console.log('connection is established');
@@ -149,7 +148,6 @@ $(document).ready(function () {
     if (window.EventSource == null) {
         alert('The browser does not support Server-Sent Events');
     } else {
-        console.log(order);
         var eventSourceField = new EventSource('/field');
         eventSourceField.onopen = function () {
             console.log('connection is established');
