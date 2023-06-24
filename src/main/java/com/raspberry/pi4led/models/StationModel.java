@@ -268,7 +268,9 @@ public class StationModel {
                             sendMessage(49); //semaphore to depot
                             sendMessage(17); //rails to depot
                             currentWay = 8;
-                            state = State.LEAVING;
+                            if(state == State.SORTED) {
+                                state = State.LEAVING;
+                            }
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
                         }
