@@ -10,6 +10,7 @@ import java.util.*;
 public class StationModel {
     private boolean isBusy = false;
     private boolean isTryingToLoadPage = false;
+    private boolean isWagonSorting = false;
 
     private final int startBitLength = 1;
     private final int stopBitLength = 1;
@@ -206,7 +207,7 @@ public class StationModel {
             } else if (receivedMessage.get(1)){
                 switch (convertReceived(receivedMessage)) {
                     case 99 -> {
-                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
                             sendMessage(35); //semaphore way 1
                             sendMessage(3); //rails way 1
                             currentWay = 1;
@@ -216,7 +217,7 @@ public class StationModel {
                         }
                     }
                     case 101 -> {
-                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
                             sendMessage(37); //semaphore way 2
                             sendMessage(5); //rails way 2
                             currentWay = 2;
@@ -226,7 +227,7 @@ public class StationModel {
                         }
                     }
                     case 103 -> {
-                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
                             sendMessage(39); //semaphore way 3
                             sendMessage(7); //rails way 3
                             currentWay = 3;
@@ -236,7 +237,7 @@ public class StationModel {
                         }
                     }
                     case 105 -> {
-                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
                             sendMessage(41); //semaphore way 4
                             sendMessage(9); //rails way 4
                             currentWay = 4;
@@ -246,7 +247,7 @@ public class StationModel {
                         }
                     }
                     case 107 -> {
-                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
                             sendMessage(43); //semaphore way 5
                             sendMessage(11); //rails way 5
                             currentWay = 5;
@@ -256,7 +257,7 @@ public class StationModel {
                         }
                     }
                     case 109 -> {
-                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
+                        if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
                             sendMessage(45); //semaphore way 6
                             sendMessage(13); //rails way 6
                             currentWay = 6;
@@ -266,7 +267,7 @@ public class StationModel {
                         }
                     }
                     case 111 -> {
-                        if(state == State.WAITING && control == Control.FIELD) {
+                        if(state == State.WAITING && control == Control.FIELD && !isWagonSorting) {
                             sendMessage(15);
                             state = State.COMING;
                         } else if (control == Control.SERVER) {
@@ -274,7 +275,7 @@ public class StationModel {
                         }
                     }
                     case 113 -> {
-                        if(state == State.SORTED && control == Control.FIELD) {
+                        if(state == State.SORTED && control == Control.FIELD && !isWagonSorting) {
                             sendMessage(49); //semaphore to depot
                             sendMessage(17); //rails to depot
                             currentWay = 8;

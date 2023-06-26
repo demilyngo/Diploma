@@ -174,7 +174,18 @@ function onload() {
                     break;
                 case "3":
                     $("#control").text("Управление по месту");
-                    document.querySelector(".bottomRight").style.display = "none"
+                    document.querySelector(".mainButtons").style.display = "none"
+                    document.querySelector("#takeControlButton").style.display = "block"
+                    break;
+                case "4":
+                    document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
+                    toSortCounter -= 1;
+                    $("#toSortCounter").text(toSortCounter);
+                    $(".map").attr("src", "../images/Map_" + event.data + ".png");
+                    break;
+                case "5":
+                    var cityToAddCounter = $("#" + cities[parseInt(event.data, 10) - 1]);
+                    cityToAddCounter.text(parseInt(cityToAddCounter.text(), 10) + 1);
                     break;
             }
         };
