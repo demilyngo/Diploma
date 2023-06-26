@@ -104,15 +104,15 @@ public class StationModel {
             frequencyTimer = System.currentTimeMillis();
             for (int i = 0; i!=messageLength; i++) {
                 while (true) {
-                    if (System.currentTimeMillis() - frequencyTimer+30*i >= 30) {
+                    if (System.currentTimeMillis() - (frequencyTimer+30*i) >= 30) {
                         if (messageBitSet.get(i)) {
                             pin.high();
-                            System.out.println(System.currentTimeMillis() - frequencyTimer+30*i);
+                            System.out.println(System.currentTimeMillis() - (frequencyTimer+30*i));
                             System.out.println("Sent: " + messageBitSet.get(i));
                             break;
                         }
                         pin.low();
-                        System.out.println(System.currentTimeMillis() - frequencyTimer+30*i);
+                        System.out.println(System.currentTimeMillis() - (frequencyTimer+30*i));
                         System.out.println("Sent: " + messageBitSet.get(i));
                         break;
                     }
@@ -153,14 +153,14 @@ public class StationModel {
         System.out.println("Received: " + receivedMessage.get(0));
         for (int i = 1; i != messageLength; i++) {
             while (true) {
-                if (frequencyTimer < System.currentTimeMillis() && System.currentTimeMillis() - frequencyTimer+30*i >= 30) {
+                if (frequencyTimer < System.currentTimeMillis() && System.currentTimeMillis() - (frequencyTimer+30*i) >= 30) {
                     if (pin.isLow()) {
                         receivedMessage.clear(i);
                     } else {
                         receivedMessage.set(i);
                     }
                     System.out.println("Received: " + receivedMessage.get(i));
-                    System.out.println(System.currentTimeMillis() - frequencyTimer+30*i);
+                    System.out.println(System.currentTimeMillis() - (frequencyTimer+30*i));
                     break;
                 }
             }
