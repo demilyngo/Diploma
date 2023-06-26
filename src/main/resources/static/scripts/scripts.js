@@ -178,6 +178,7 @@ $(document).ready(function () {
                     document.querySelector("#overlay").style.display = "block"
                     break;
                 case "8":
+                    console.log(toSortCounter);
                     document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
                     toSortCounter -= 1;
                     $("#toSortCounter").text(toSortCounter);

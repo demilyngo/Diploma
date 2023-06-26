@@ -140,6 +140,7 @@ public class WebController {
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("7").data("Field control").build();
                         emitter.send(eventBuilder);
+                        Thread.sleep(60);
                     } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.FIELD) {
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
@@ -153,7 +154,7 @@ public class WebController {
                         eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
                     }
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
