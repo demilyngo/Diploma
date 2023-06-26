@@ -114,7 +114,6 @@ public class StationModel {
                         pin.low();
                         System.out.println(System.currentTimeMillis() - frequencyTimer+30*i);
                         System.out.println("Sent: " + messageBitSet.get(i));
-                        frequencyTimer = System.currentTimeMillis();
                         break;
                     }
                 }
