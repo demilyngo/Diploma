@@ -175,6 +175,7 @@ $(document).ready(function () {
                     $("#control").text("Управление по месту");
                     document.querySelector(".mainButtons").style.display = "none"
                     document.querySelector("#takeControlButton").style.display = "block"
+                    document.querySelector("#overlay").style.display = "block"
                     break;
                 case "8":
                     document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));

@@ -204,9 +204,9 @@ public class StationModel {
                 switch (convertReceived(receivedMessage)) {
                     case 99 -> {
                         if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
+                            currentWay = 1;
                             sendMessage(35); //semaphore way 1
                             sendMessage(3); //rails way 1
-                            currentWay = 1;
                             state = State.SORTING;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
@@ -214,9 +214,9 @@ public class StationModel {
                     }
                     case 101 -> {
                         if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
+                            currentWay = 2;
                             sendMessage(37); //semaphore way 2
                             sendMessage(5); //rails way 2
-                            currentWay = 2;
                             state = State.SORTING;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
@@ -224,9 +224,9 @@ public class StationModel {
                     }
                     case 103 -> {
                         if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
+                            currentWay = 3;
                             sendMessage(39); //semaphore way 3
                             sendMessage(7); //rails way 3
-                            currentWay = 3;
                             state = State.SORTING;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
@@ -234,9 +234,9 @@ public class StationModel {
                     }
                     case 105 -> {
                         if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
+                            currentWay = 4;
                             sendMessage(41); //semaphore way 4
                             sendMessage(9); //rails way 4
-                            currentWay = 4;
                             state = State.SORTING;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
@@ -244,9 +244,9 @@ public class StationModel {
                     }
                     case 107 -> {
                         if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
+                            currentWay = 5;
                             sendMessage(43); //semaphore way 5
                             sendMessage(11); //rails way 5
-                            currentWay = 5;
                             state = State.SORTING;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
@@ -254,9 +254,9 @@ public class StationModel {
                     }
                     case 109 -> {
                         if ((state == State.READY || state == State.SORTING) && control == Control.FIELD && !isWagonSorting) {
+                            currentWay = 6;
                             sendMessage(45); //semaphore way 6
                             sendMessage(13); //rails way 6
-                            currentWay = 6;
                             state = State.SORTING;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
@@ -272,9 +272,9 @@ public class StationModel {
                     }
                     case 113 -> {
                         if(state == State.SORTED && control == Control.FIELD && !isWagonSorting) {
+                            currentWay = 8;
                             sendMessage(49); //semaphore to depot
                             sendMessage(17); //rails to depot
-                            currentWay = 8;
                             state = State.LEAVING;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;

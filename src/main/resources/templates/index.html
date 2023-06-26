@@ -80,7 +80,7 @@
                 <button id="takeControlButton"
                         th:style="${station.getState().displayValue == 'Управление по месту' ? 'display: block' : 'display: none'}">
                 </button>
-                <p th:text="${station.getControl().displayValue}" id="control"></p>
+                <p th:text="${station.getControl().displayValue}" id="control">Забрать управление</p>
             </div>
         </div>
     </div>
