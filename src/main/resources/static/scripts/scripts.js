@@ -179,8 +179,8 @@ $(document).ready(function () {
                     break;
                 case "8":
                     console.log(toSortCounter);
-                    document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
                     toSortCounter -= 1;
+                    document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
                     $("#toSortCounter").text(toSortCounter);
                     $(".map").attr("src", "../images/Map_" + eventField.data + ".png");
                     break;
