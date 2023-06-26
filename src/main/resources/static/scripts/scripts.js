@@ -100,6 +100,7 @@ $("#startButton").click(function(e) {
     if (window.EventSource == null) {
         alert('The browser does not support Server-Sent Events');
     } else {
+        console.log(order);
         var eventSource = new EventSource('/start?' + order);
         eventSource.onopen = function () {
             console.log('connection is established');
@@ -144,18 +145,19 @@ $("#startButton").click(function(e) {
     }
 })
 
-$(document).ready(function () {
+function onload() {
     if (window.EventSource == null) {
         alert('The browser does not support Server-Sent Events');
     } else {
-        var eventSourceField = new EventSource('/field');
-        eventSourceField.onopen = function () {
+        console.log(order);
+        var eventSource = new EventSource('/field');
+        eventSource.onopen = function () {
             console.log('connection is established');
         };
-        eventSourceField.onerror = function (error) {
-            console.log('connection state: ' + eventSourceField.readyState + ', error: ' + error);
+        eventSource.onerror = function (error) {
+            console.log('connection state: ' + eventSource.readyState + ', error: ' + error);
         };
-        eventSourceField.onmessage = function (event) {
+        eventSource.onmessage = function (event) {
             console.log('id: ' + event.lastEventId + ', data: ' + event.data);
             switch (event.lastEventId) {
                 case "1":
@@ -163,23 +165,22 @@ $(document).ready(function () {
                     var prevState = $(".state").text();
                     $(".state").text("Состояние: Авария");
                     $("#controllerError").text("Авария. Ожидайте устранения неполадок.");
-                    document.querySelector(".mainButtons").style.display = "none"
+                    document.querySelector(".bottomRight").style.display = "none"
                     $(".modal-click").modal({fadeDuration: 250});
                     break;
                 case "2":
-                    document.querySelector(".mainButtons").style.display = "block";
+                    document.querySelector(".bottomRight").style.display = "block";
                     $(".state").text(prevState);
                     break;
                 case "3":
                     $("#control").text("Управление по месту");
-                    document.querySelector(".mainButtons").style.display = "none";
-                    $(".map").attr("src", "../images/Map_" + event.data + ".png");
+                    document.querySelector(".bottomRight").style.display = "none"
                     break;
             }
         };
     }
-});
-
+};
+onload();
 
 // $("#restartButton").click(function(e) {
 //     document.querySelector(".wagonItems").innerHTML = "";

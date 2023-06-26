@@ -15,33 +15,32 @@ import java.util.concurrent.Executors;
 
 @Controller
 public class WebController {
-    private final ExecutorService fixedThreadPool = Executors.newFixedThreadPool(5);
-    final StationModel stationModel = new StationModel(State.WAITING, Control.SERVER, "Сургутская");
+    private final ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+    final StationModel stationModel = new StationModel(State.WAITING, Control.FIELD, "Сургутская");
 
 
     @GetMapping("/")
-    public synchronized String greeting(Model model) throws InterruptedException {
+    public String greeting(Model model) throws InterruptedException {
         stationModel.setTryingToLoadPage(true);
         while(stationModel.isBusy()) {
             Thread.onSpinWait();
         }
+
         model.addAttribute("station", stationModel);
         model.addAttribute("cities", stationModel.getCities());
         model.addAttribute("counters", stationModel.getCounters());
         model.addAttribute("wagonList", stationModel.getWagonList());
-        if(stationModel.getState() == State.WAITING) {
-            stationModel.sendMessage(49);
-            stationModel.sendMessage(17);
-        }
         stationModel.setTryingToLoadPage(false);
+        stationModel.sendMessage(49);
+        stationModel.sendMessage(17);
         return "index";
     }
 
     @ResponseBody
     @GetMapping(path = "/wait", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public synchronized SseEmitter prepareForSorting()  {
+    public SseEmitter prepareForSorting()  {
         SseEmitter emitter = new SseEmitter(-1L);
-        fixedThreadPool.execute(() -> {
+        cachedThreadPool.execute(() -> {
             if(stationModel.getState() == State.WAITING) {
                 stationModel.setState(State.COMING);
                 //cached thread pool
@@ -77,10 +76,10 @@ public class WebController {
 
     @GetMapping(path = "/start", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
-    public synchronized SseEmitter startSorting(@RequestParam(value = "order", defaultValue = "0") String order) {
+    public SseEmitter startSorting(@RequestParam(value = "order", defaultValue = "0") String order) {
         System.out.println(stationModel.getTrainCounter());
         SseEmitter emitter = new SseEmitter(-1L);
-        fixedThreadPool.execute(() -> {
+        cachedThreadPool.execute(() -> {
             stationModel.setState(State.SORTING);
             try {
                 for(char way : order.toCharArray()) {
@@ -124,10 +123,13 @@ public class WebController {
 
     @ResponseBody
     @GetMapping(path = "/field", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public synchronized SseEmitter emergency() {
+    public SseEmitter emergency() {
         SseEmitter emitter = new SseEmitter(-1L);
-        fixedThreadPool.execute(() -> {
+        cachedThreadPool.execute(() -> {
             while(true) {
+                hile(stationModel.isBusy()) {
+                    Thread.onSpinWait();
+                }
                 if(stationModel.convertReceived(stationModel.getReceivedMessage()) == 115) {
                     var eventBuilder = SseEmitter.event();
                     eventBuilder.id(stationModel.getState() == State.EMERGENCY ? "2" : "1").data("Emergency toggle").build();
@@ -136,10 +138,9 @@ public class WebController {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97
-                        && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115) {
+                } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115) {
                     var eventBuilder = SseEmitter.event();
-                    eventBuilder.id("3").data(stationModel.getCurrentWay()).build();
+                    eventBuilder.id("3").data("Field control").build();
                     try {
                         emitter.send(eventBuilder);
                     } catch (IOException e) {
@@ -152,7 +153,7 @@ public class WebController {
     }
 
     @GetMapping("/restart")
-    public synchronized String restartSystem() {
+    public String restartSystem() {
         stationModel.setErrorId(0);
         stationModel.setFirst(true);
         stationModel.setState(State.WAITING);

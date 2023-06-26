@@ -8,6 +8,9 @@ import java.util.*;
 @Getter
 @Setter
 public class StationModel {
+    private boolean isBusy = false;
+    private boolean isTryingToLoadPage = false;
+
     private final int startBitLength = 1;
     private final int stopBitLength = 1;
     private final int controllerLength = 2;
@@ -26,12 +29,10 @@ public class StationModel {
     private State stateBeforeEmergency;
     private Control control;
     private int trainCounter;
+    private boolean isFirst = true;
+
     private int currentWay = 8;
     private String nameOfStation;
-
-    private boolean isFirst = true;
-    private boolean isBusy = false;
-    private boolean isTryingToLoadPage = false;
 
     boolean isSending, isReceiving, isFalseMessage;
     private BitSet receivedMessage = new BitSet(8);
@@ -49,6 +50,7 @@ public class StationModel {
             pin.setMode(PinMode.DIGITAL_INPUT);
         }
     }
+
     public void setOutput() {
         if (pin == null) {
             pin = gpioController.provisionDigitalMultipurposePin(RaspiPin.GPIO_01, PinMode.DIGITAL_OUTPUT);
@@ -57,6 +59,7 @@ public class StationModel {
             pin.setMode(PinMode.DIGITAL_OUTPUT);
         }
     }
+
     public BitSet convertToBitSet(Integer message) {
         BitSet resMessage = new BitSet(messageLength);
         int pos = 0;
@@ -101,16 +104,17 @@ public class StationModel {
             for (int i = 0; i!=messageLength; i++) {
                 while (true) {
                     if (System.currentTimeMillis() - frequencyTimer >= 30) {
-                        System.out.println(System.currentTimeMillis() - frequencyTimer);
-                        frequencyTimer = System.currentTimeMillis();
                         if (messageBitSet.get(i)) {
                             pin.high();
+                            System.out.println(System.currentTimeMillis() - frequencyTimer);
                             System.out.println("Sent: " + messageBitSet.get(i));
-
+                            frequencyTimer = System.currentTimeMillis();
                             break;
                         }
                         pin.low();
+                        System.out.println(System.currentTimeMillis() - frequencyTimer);
                         System.out.println("Sent: " + messageBitSet.get(i));
+                        frequencyTimer = System.currentTimeMillis();
                         break;
                     }
                 }
@@ -120,21 +124,27 @@ public class StationModel {
                 receiveMessage();
             }
             j++;
-        } while(convertReceived(receivedMessage) == 0
+        } while(j != 5
+                && convertReceived(receivedMessage) == 0
                 && !isFalseMessage);
 //        if (j == 5) {
 //            errorId = connectionErrorIds.get(checkControllerMessages.indexOf(checkControllerMessage));
 //        }
     }
+
+
     public void receiveMessage() throws InterruptedException {
         receivedMessage.clear();
         long startTime = System.currentTimeMillis();
         System.out.println("After stop bit: " + (long)(startTime - frequencyTimer));
         while (true) {
-            if(pin.isLow() || System.currentTimeMillis() - startTime > 1000) {
+            if(!pin.isHigh() || System.currentTimeMillis() - startTime > 1000) {
                 break;
             }
         }
+//        while (pin.isHigh() && System.currentTimeMillis() - startTime < 1000) { // wait for start bit
+//            Thread.onSpinWait();
+//        }
         if (pin.isHigh()) {
             return;
         }
@@ -146,19 +156,20 @@ public class StationModel {
         for (int i = 1; i != messageLength; i++) {
             while (true) {
                 if (frequencyTimer < System.currentTimeMillis() && System.currentTimeMillis() - frequencyTimer >= 30) {
-                    System.out.println(System.currentTimeMillis() - frequencyTimer);
-                    frequencyTimer = System.currentTimeMillis();
                     if (pin.isLow()) {
                         receivedMessage.clear(i);
                     } else {
                         receivedMessage.set(i);
                     }
                     System.out.println("Received: " + receivedMessage.get(i));
+                    System.out.println(System.currentTimeMillis() - frequencyTimer);
+                    frequencyTimer = System.currentTimeMillis();
                     break;
                 }
             }
         }
         System.out.println("Whole message: " + convertReceived(receivedMessage));
+
         if (convertReceived(receivedMessage) == checkControllerMessage) { //controller is connected
             System.out.println("Checked successfully");
         }
@@ -167,7 +178,7 @@ public class StationModel {
 //            return;
 //        }
 
-        else if (convertReceived(receivedMessage) == 19 && state != State.WAITING) { //counter at the start
+        else if (convertReceived(receivedMessage) == 19) { //counter at the start
             if (this.state == State.COMING && !isFirst) {
                 trainCounter++;
                 wagonModel newWagon = new wagonModel(trainCounter, cities.get(0), 0);
@@ -192,7 +203,7 @@ public class StationModel {
         else if (!receivedMessage.get(0) && receivedMessage.get(2)) {
             if (this.state == State.SORTING && convertReceived(receivedMessage) == 63 + 2 * currentWay) {
                 counters.set(currentWay - 1, counters.get(currentWay - 1) + 1); // counters at the ends
-            } else if (receivedMessage.get(1)) {
+            } else if (receivedMessage.get(1)){
                 switch (convertReceived(receivedMessage)) {
                     case 99 -> {
                         if ((state == State.READY || state == State.SORTING) && control == Control.FIELD) {
@@ -263,13 +274,11 @@ public class StationModel {
                         }
                     }
                     case 113 -> {
-                        if((state == State.SORTED || state == State.WAITING) && control == Control.FIELD) {
+                        if(state == State.SORTED && control == Control.FIELD) {
                             sendMessage(49); //semaphore to depot
                             sendMessage(17); //rails to depot
                             currentWay = 8;
-                            if(state == State.SORTED) {
-                                state = State.LEAVING;
-                            }
+                            state = State.LEAVING;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
                         }
@@ -315,7 +324,6 @@ public class StationModel {
                         }
                     }
                     while (isTryingToLoadPage) {
-                        System.out.println(1);
                         Thread.onSpinWait();
                     }
                 } else {
@@ -333,7 +341,6 @@ public class StationModel {
                         }
                     }
                     while (isTryingToLoadPage) {
-                        System.out.println(2);
                         Thread.onSpinWait();
                     }
                 }
