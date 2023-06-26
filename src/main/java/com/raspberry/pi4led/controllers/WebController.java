@@ -130,34 +130,35 @@ public class WebController {
                 while(stationModel.isBusy()) {
                     Thread.onSpinWait();
                 }
-                if(stationModel.convertReceived(stationModel.getReceivedMessage()) == 115) {
-                    var eventBuilder = SseEmitter.event();
-                    eventBuilder.id(stationModel.getState() == State.EMERGENCY ? "2" : "1").data("Emergency toggle").build();
-                    try {
+                try {
+                    if (stationModel.convertReceived(stationModel.getReceivedMessage()) == 115) {
+                        var eventBuilder = SseEmitter.event();
+                        eventBuilder.id(stationModel.getState() == State.EMERGENCY ? "2" : "1").data("Emergency toggle").build();
+                        try {
+                            emitter.send(eventBuilder);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.SERVER) {
+                        var eventBuilder = SseEmitter.event();
+                        eventBuilder.id("3").data("Field control").build();
                         emitter.send(eventBuilder);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.SERVER) {
-                    var eventBuilder = SseEmitter.event();
-                    eventBuilder.id("3").data("Field control").build();
-                    try {
+
+                    } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.FIELD) {
+                        var eventBuilder = SseEmitter.event();
+                        eventBuilder.id("4").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    stationModel.setWagonSorting(true);
-                    while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65+2*stationModel.getCurrentWay()) {
-                        Thread.onSpinWait();
-                    }
-                    stationModel.setWagonSorting(false);
-                    eventBuilder = SseEmitter.event();
-                    eventBuilder.id("5").data(stationModel.getCurrentWay()).build();
-                    try {
+                        stationModel.setWagonSorting(true);
+                        while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
+                            Thread.onSpinWait();
+                        }
+                        stationModel.setWagonSorting(false);
+                        eventBuilder = SseEmitter.event();
+                        eventBuilder.id("5").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });

@@ -149,10 +149,9 @@ function onload() {
     if (window.EventSource == null) {
         alert('The browser does not support Server-Sent Events');
     } else {
-        console.log(order);
         var eventSource = new EventSource('/field');
         eventSource.onopen = function () {
-            console.log('connection is established');
+            console.log('connection is established FIELD');
         };
         eventSource.onerror = function (error) {
             console.log('connection state: ' + eventSource.readyState + ', error: ' + error);
