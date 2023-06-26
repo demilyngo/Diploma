@@ -127,9 +127,6 @@ public class WebController {
         SseEmitter emitter = new SseEmitter(-1L);
         cachedThreadPool.execute(() -> {
             while(true) {
-                while(stationModel.isBusy()) {
-                    Thread.onSpinWait();
-                }
                 try {
                     if (stationModel.convertReceived(stationModel.getReceivedMessage()) == 115) {
                         var eventBuilder = SseEmitter.event();
