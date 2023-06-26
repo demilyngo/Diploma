@@ -144,11 +144,11 @@ public class WebController {
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
-                        stationModel.setWagonSorting(true);
+//                        stationModel.setWagonSorting(true);
                         while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
                             Thread.onSpinWait();
                         }
-                        stationModel.setWagonSorting(false);
+//                        stationModel.setWagonSorting(false);
                         eventBuilder = SseEmitter.event();
                         eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
