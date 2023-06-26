@@ -149,16 +149,16 @@ $(document).ready(function () {
     if (window.EventSource == null) {
         alert('The browser does not support Server-Sent Events');
     } else {
-        var eventSource = new EventSource('/field');
-        eventSource.onopen = function () {
+        var eventSourceField = new EventSource('/field');
+        eventSourceField.onopen = function () {
             console.log('connection is established FIELD');
         };
-        eventSource.onerror = function (error) {
-            console.log('connection state: ' + eventSource.readyState + ', error: ' + error);
+        eventSourceField.onerror = function (error) {
+            console.log('connection state: ' + eventSourceField.readyState + ', error: ' + error);
         };
-        eventSource.onmessage = function (event) {
-            console.log('id: ' + event.lastEventId + ', data: ' + event.data);
-            switch (event.lastEventId) {
+        eventSourceField.onmessage = function (eventField) {
+            console.log('id: ' + eventField.lastEventId + ', data: ' + eventField.data);
+            switch (eventField.lastEventId) {
                 case "5":
                     $("#control").text("Управление по месту");
                     var prevState = $(".state").text();
@@ -181,10 +181,10 @@ $(document).ready(function () {
                     document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
                     toSortCounter -= 1;
                     $("#toSortCounter").text(toSortCounter);
-                    $(".map").attr("src", "../images/Map_" + event.data + ".png");
+                    $(".map").attr("src", "../images/Map_" + eventField.data + ".png");
                     break;
                 case "9":
-                    var cityToAddCounter = $("#" + cities[parseInt(event.data, 10) - 1]);
+                    var cityToAddCounter = $("#" + cities[parseInt(eventField.data, 10) - 1]);
                     cityToAddCounter.text(parseInt(cityToAddCounter.text(), 10) + 1);
                     break;
             }

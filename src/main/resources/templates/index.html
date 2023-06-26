@@ -79,8 +79,9 @@
 <!--                <button id="alarmButton" style="background-color: orangered">Авария</button>-->
                 <button id="takeControlButton"
                         th:style="${station.getState().displayValue == 'Управление по месту' ? 'display: block' : 'display: none'}">
+                    Забрать управление
                 </button>
-                <p th:text="${station.getControl().displayValue}" id="control">Забрать управление</p>
+                <p th:text="${station.getControl().displayValue}" id="control"></p>
             </div>
         </div>
     </div>
