@@ -130,7 +130,7 @@ public class WebController {
                 try {
                     if (stationModel.convertReceived(stationModel.getReceivedMessage()) == 115) {
                         var eventBuilder = SseEmitter.event();
-                        eventBuilder.id(stationModel.getState() == State.EMERGENCY ? "2" : "1").data("Emergency toggle").build();
+                        eventBuilder.id(stationModel.getState() == State.EMERGENCY ? "6" : "5").data("Emergency toggle").build();
                         try {
                             emitter.send(eventBuilder);
                         } catch (IOException e) {
@@ -138,12 +138,11 @@ public class WebController {
                         }
                     } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.SERVER) {
                         var eventBuilder = SseEmitter.event();
-                        eventBuilder.id("3").data("Field control").build();
+                        eventBuilder.id("7").data("Field control").build();
                         emitter.send(eventBuilder);
-
                     } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.FIELD) {
                         var eventBuilder = SseEmitter.event();
-                        eventBuilder.id("4").data(stationModel.getCurrentWay()).build();
+                        eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
                         stationModel.setWagonSorting(true);
                         while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
@@ -151,7 +150,7 @@ public class WebController {
                         }
                         stationModel.setWagonSorting(false);
                         eventBuilder = SseEmitter.event();
-                        eventBuilder.id("5").data(stationModel.getCurrentWay()).build();
+                        eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
                     }
                 } catch (IOException e) {

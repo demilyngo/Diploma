@@ -104,12 +104,11 @@ public class StationModel {
             frequencyTimer = System.currentTimeMillis();
             for (int i = 0; i!=messageLength; i++) {
                 while (true) {
-                    if (System.currentTimeMillis() - frequencyTimer >= 30) {
+                    if (System.currentTimeMillis() - frequencyTimer+30*i >= 30) {
                         if (messageBitSet.get(i)) {
                             pin.high();
-                            System.out.println(System.currentTimeMillis() - frequencyTimer);
+                            System.out.println(System.currentTimeMillis() - frequencyTimer+30*(i+1));
                             System.out.println("Sent: " + messageBitSet.get(i));
-                            frequencyTimer = System.currentTimeMillis();
                             break;
                         }
                         pin.low();
@@ -149,22 +148,20 @@ public class StationModel {
         if (pin.isHigh()) {
             return;
         }
-
+        frequencyTimer = System.currentTimeMillis() + 15;
         receivedMessage.clear(0);
         System.out.println(System.currentTimeMillis());
         System.out.println("Received: " + receivedMessage.get(0));
-        frequencyTimer = System.currentTimeMillis() + 3;
         for (int i = 1; i != messageLength; i++) {
             while (true) {
-                if (frequencyTimer < System.currentTimeMillis() && System.currentTimeMillis() - frequencyTimer >= 30) {
+                if (frequencyTimer < System.currentTimeMillis() && System.currentTimeMillis() - frequencyTimer+30*i >= 30) {
                     if (pin.isLow()) {
                         receivedMessage.clear(i);
                     } else {
                         receivedMessage.set(i);
                     }
                     System.out.println("Received: " + receivedMessage.get(i));
-                    System.out.println(System.currentTimeMillis() - frequencyTimer);
-                    frequencyTimer = System.currentTimeMillis();
+                    System.out.println(System.currentTimeMillis() - frequencyTimer+30*i);
                     break;
                 }
             }

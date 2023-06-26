@@ -159,7 +159,7 @@ $(document).ready(function () {
         eventSource.onmessage = function (event) {
             console.log('id: ' + event.lastEventId + ', data: ' + event.data);
             switch (event.lastEventId) {
-                case "1":
+                case "5":
                     $("#control").text("Управление по месту");
                     var prevState = $(".state").text();
                     $(".state").text("Состояние: Авария");
@@ -167,22 +167,22 @@ $(document).ready(function () {
                     document.querySelector(".bottomRight").style.display = "none"
                     $(".modal-click").modal({fadeDuration: 250});
                     break;
-                case "2":
+                case "6":
                     document.querySelector(".bottomRight").style.display = "block";
                     $(".state").text(prevState);
                     break;
-                case "3":
+                case "7":
                     $("#control").text("Управление по месту");
                     document.querySelector(".mainButtons").style.display = "none"
                     document.querySelector("#takeControlButton").style.display = "block"
                     break;
-                case "4":
+                case "8":
                     document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
                     toSortCounter -= 1;
                     $("#toSortCounter").text(toSortCounter);
                     $(".map").attr("src", "../images/Map_" + event.data + ".png");
                     break;
-                case "5":
+                case "9":
                     var cityToAddCounter = $("#" + cities[parseInt(event.data, 10) - 1]);
                     cityToAddCounter.text(parseInt(cityToAddCounter.text(), 10) + 1);
                     break;
