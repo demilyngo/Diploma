@@ -145,7 +145,7 @@ $("#startButton").click(function(e) {
     }
 })
 
-function onload() {
+$(document).ready(function () {
     if (window.EventSource == null) {
         alert('The browser does not support Server-Sent Events');
     } else {
@@ -189,8 +189,7 @@ function onload() {
             }
         };
     }
-};
-onload();
+});
 
 // $("#restartButton").click(function(e) {
 //     document.querySelector(".wagonItems").innerHTML = "";
