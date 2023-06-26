@@ -146,18 +146,18 @@ public class WebController {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
-                stationModel.setWagonSorting(true);
-                while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65+2*stationModel.getCurrentWay()) {
-                    Thread.onSpinWait();
-                }
-                stationModel.setWagonSorting(false);
-                var eventBuilder = SseEmitter.event();
-                eventBuilder.id("5").data(stationModel.getCurrentWay()).build();
-                try {
-                    emitter.send(eventBuilder);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    stationModel.setWagonSorting(true);
+                    while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65+2*stationModel.getCurrentWay()) {
+                        Thread.onSpinWait();
+                    }
+                    stationModel.setWagonSorting(false);
+                    eventBuilder = SseEmitter.event();
+                    eventBuilder.id("5").data(stationModel.getCurrentWay()).build();
+                    try {
+                        emitter.send(eventBuilder);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
