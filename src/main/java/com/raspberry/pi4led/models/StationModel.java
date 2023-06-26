@@ -107,12 +107,12 @@ public class StationModel {
                     if (System.currentTimeMillis() - frequencyTimer+30*i >= 30) {
                         if (messageBitSet.get(i)) {
                             pin.high();
-                            System.out.println(System.currentTimeMillis() - frequencyTimer+30*(i+1));
+                            System.out.println(System.currentTimeMillis() - frequencyTimer+30*i);
                             System.out.println("Sent: " + messageBitSet.get(i));
                             break;
                         }
                         pin.low();
-                        System.out.println(System.currentTimeMillis() - frequencyTimer);
+                        System.out.println(System.currentTimeMillis() - frequencyTimer+30*i);
                         System.out.println("Sent: " + messageBitSet.get(i));
                         frequencyTimer = System.currentTimeMillis();
                         break;
