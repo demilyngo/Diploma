@@ -172,15 +172,15 @@ $(document).ready(function () {
                     $(".state").text(prevState);
                     break;
                 case "7":
+                    toSortCounter -= 1;
                     $("#control").text("Управление по месту");
                     document.querySelector(".mainButtons").style.display = "none"
                     document.querySelector("#takeControlButton").style.display = "block"
                     document.querySelector("#overlay").style.display = "block"
                     break;
                 case "8":
-                    console.log(toSortCounter);
-                    toSortCounter -= 1;
                     document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
+                    toSortCounter -= 1;
                     $("#toSortCounter").text(toSortCounter);
                     $(".map").attr("src", "../images/Map_" + eventField.data + ".png");
                     break;
