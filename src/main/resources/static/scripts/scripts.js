@@ -145,6 +145,18 @@ $("#startButton").click(function(e) {
     }
 })
 
+$("#takeControlButton").click(function(e) {
+    e.preventDefault();
+    $("#control").text("Управление с АРМ");
+    document.querySelector(".mainButtons").style.display = "block";
+    document.querySelector("#takeControlButton").style.display = "none";
+    document.querySelector("#overlay").style.display = "none";
+    $.ajax({
+        url: '/takeControl',
+        method: 'get',
+    })
+})
+
 $(document).ready(function () {
     if (window.EventSource == null) {
         alert('The browser does not support Server-Sent Events');
@@ -164,19 +176,19 @@ $(document).ready(function () {
                     var prevState = $(".state").text();
                     $(".state").text("Состояние: Авария");
                     $("#controllerError").text("Авария. Ожидайте устранения неполадок.");
-                    document.querySelector(".bottomRight").style.display = "none"
+                    document.querySelector(".mainButtons").style.display = "none"
                     $(".modal-click").modal({fadeDuration: 250});
                     break;
                 case "6":
-                    document.querySelector(".bottomRight").style.display = "block";
+                    document.querySelector(".mainButtons").style.display = "block";
                     $(".state").text(prevState);
                     break;
                 case "7":
                     toSortCounter -= 1;
                     $("#control").text("Управление по месту");
-                    document.querySelector(".mainButtons").style.display = "none"
-                    document.querySelector("#takeControlButton").style.display = "block"
-                    document.querySelector("#overlay").style.display = "block"
+                    document.querySelector(".mainButtons").style.display = "none";
+                    document.querySelector("#takeControlButton").style.display = "block";
+                    document.querySelector("#overlay").style.display = "block";
                     break;
                 case "8":
                     document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));

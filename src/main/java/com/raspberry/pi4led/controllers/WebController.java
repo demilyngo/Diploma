@@ -136,11 +136,16 @@ public class WebController {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        while(stationModel.getReceivedMessage().nextSetBit(0)!=-1) {
+                            Thread.onSpinWait();
+                        }
                     } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.SERVER) {
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("7").data("Field control").build();
                         emitter.send(eventBuilder);
-                        stationModel.getReceivedMessage().clear();
+                        while(stationModel.getReceivedMessage().nextSetBit(0)!=-1) {
+                            Thread.onSpinWait();
+                        }
                     } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.FIELD) {
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
@@ -153,6 +158,9 @@ public class WebController {
                         eventBuilder = SseEmitter.event();
                         eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
+                        while(stationModel.getReceivedMessage().nextSetBit(0)!=-1) {
+                            Thread.onSpinWait();
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -160,6 +168,11 @@ public class WebController {
             }
         });
         return emitter;
+    }
+
+    @GetMapping("/takeControl")
+    public void takeControl() {
+        stationModel.setControl(Control.SERVER);
     }
 
     @GetMapping("/restart")
