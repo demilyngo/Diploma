@@ -171,10 +171,14 @@ public class WebController {
         });
         return emitter;
     }
-
-    @GetMapping("/takeControl")
-    public void takeControl() {
+    @ResponseBody
+    @GetMapping(path = "/takeControl", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter takeControl() throws IOException {
+        SseEmitter emitter = new SseEmitter(-1L);
         stationModel.setControl(Control.SERVER);
+        System.out.println(stationModel.getControl());
+        emitter.send("Changed control");
+        return emitter;
     }
 
     @GetMapping("/restart")

@@ -152,19 +152,27 @@ $("#startButton").click(function(e) {
 
 $("#takeControlButton").click(function(e) {
     e.preventDefault();
-    $.ajax({
-        url: '/takeControl',
-        dataType: 'json',
-        type: 'GET',
-        cache: 'false',
-        contentType: 'application/json',
-        success: function () {
+
+
+    if (window.EventSource == null) {
+        alert('The browser does not support Server-Sent Events');
+    } else {
+        console.log(order);
+        var eventSource = new EventSource('/takeControl');
+        eventSource.onopen = function () {
+            console.log('connection is established');
+        };
+        eventSource.onerror = function (error) {
+            console.log('connection state: ' + eventSource.readyState + ', error: ' + error);
+        };
+        eventSource.onmessage = function (event) {
             $("#control").text("Управление с АРМ");
             document.querySelector(".mainButtons").style.display = "block";
             document.querySelector("#takeControlButton").style.display = "none";
             document.querySelector("#overlay").style.display = "none";
-        }
-    })
+            eventSource.close();
+        };
+    }
 })
 
 $(document).ready(function () {
