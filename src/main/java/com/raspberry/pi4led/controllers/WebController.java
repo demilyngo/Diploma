@@ -149,6 +149,10 @@ public class WebController {
                             Thread.onSpinWait();
                         }
                     } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.FIELD) {
+                        while (!stationModel.isWayReady()) {
+                            Thread.onSpinWait();
+                        }
+                        stationModel.setWayReady(false);
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
@@ -175,6 +179,11 @@ public class WebController {
     @GetMapping(path = "/takeControl", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter takeControl() throws IOException {
         SseEmitter emitter = new SseEmitter(-1L);
+
+        var eventBuilder = SseEmitter.event();
+        eventBuilder.id("1").data("Took control").build();
+        emitter.send(eventBuilder);
+
         stationModel.setControl(Control.SERVER);
         System.out.println(stationModel.getControl());
         emitter.send("Changed control");

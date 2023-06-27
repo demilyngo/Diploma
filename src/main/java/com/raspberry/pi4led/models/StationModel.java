@@ -11,6 +11,7 @@ public class StationModel {
     private boolean isBusy = false;
     private boolean isTryingToLoadPage = false;
     private boolean isWagonSorting = false;
+    private boolean isWayReady = false;
 
     private final int startBitLength = 1;
     private final int stopBitLength = 1;
@@ -290,6 +291,7 @@ public class StationModel {
                         }
                     }
                 }
+                isWayReady = true;
             }
         }
     }
