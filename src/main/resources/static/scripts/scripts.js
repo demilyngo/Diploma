@@ -152,13 +152,15 @@ $("#startButton").click(function(e) {
 
 $("#takeControlButton").click(function(e) {
     e.preventDefault();
-    $("#control").text("Управление с АРМ");
-    document.querySelector(".mainButtons").style.display = "block";
-    document.querySelector("#takeControlButton").style.display = "none";
-    document.querySelector("#overlay").style.display = "none";
     $.ajax({
-        url: '/takeControl',
-        method: 'get',
+        url: 'takeControl',
+        method: 'GET',
+        success: function () {
+            $("#control").text("Управление с АРМ");
+            document.querySelector(".mainButtons").style.display = "block";
+            document.querySelector("#takeControlButton").style.display = "none";
+            document.querySelector("#overlay").style.display = "none";
+        }
     })
 })
 
