@@ -37,6 +37,7 @@ $("#waitButton").click(function (e) {
         };
         eventSource.onmessage = function (event) {
             console.log('id: ' + event.lastEventId + ', data: ' + event.data);
+            console.log('counter: ' + toSortCounter);
             switch (event.lastEventId ) {
                 case "1":
                     if(!isFirst) {
@@ -113,6 +114,7 @@ $("#startButton").click(function(e) {
         };
         eventSource.onmessage = function (event) {
             console.log('id: ' + event.lastEventId + ', data: ' + event.data);
+            console.log('counter: ' + toSortCounter);
             switch (event.lastEventId) {
                 case "1":
                     document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
@@ -173,6 +175,7 @@ $(document).ready(function () {
         };
         eventSourceField.onmessage = function (eventField) {
             console.log('id: ' + eventField.lastEventId + ', data: ' + eventField.data);
+            console.log('counter: ' + toSortCounter);
             switch (eventField.lastEventId) {
                 case "5":
                     $("#control").text("Управление по месту");
