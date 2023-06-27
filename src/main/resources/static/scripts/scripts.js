@@ -18,6 +18,7 @@ $( "select" ).on( "change", checkOrder );
 //SEND TO STARTING POSITION
 let cities = ["Москва", "Казань", "Магадан", "Воркута", "Якутск", "Тюмень"];
 var toSortCounter = parseInt($("#toSortCounter").text(), 10);
+var isFirst = true;
 $("#waitButton").click(function (e) {
     e.preventDefault();
     $(".state").text("Состояние: Прибытие");
@@ -38,7 +39,9 @@ $("#waitButton").click(function (e) {
             console.log('id: ' + event.lastEventId + ', data: ' + event.data);
             switch (event.lastEventId ) {
                 case "1":
-                    if(toSortCounter > 0) {
+                    if(!isFirst) {
+                        toSortCounter += 1;
+                        $("#toSortCounter").text(toSortCounter);
                         let template = " " +
                             "                    <div class=\"wagonItem\" id=\"wagonItem" + toSortCounter + "\">\n" +
                             "                        <div class=\"wagonNumber\">\n" +
@@ -55,9 +58,9 @@ $("#waitButton").click(function (e) {
                             "                        <input type=\"checkbox\" class=\"type\"/>\n" +
                             "                    </div>";
                         document.querySelector(".wagonItems").innerHTML += template;
-                        $("#toSortCounter").text(toSortCounter);
+                    } else {
+                        isFirst = false
                     }
-                    toSortCounter+=1;
                     break;
 
                 case "2":
@@ -90,7 +93,7 @@ $("#startButton").click(function(e) {
     document.querySelector("#overlay").style.display = "block";
     e.preventDefault();
     order = checkOrder();
-    toSortCounter--;
+    //toSortCounter--;
 
     $(".state").text("Состояние: Сортировка");
     var wagonList = document.querySelectorAll(".selectWagon");
@@ -184,7 +187,6 @@ $(document).ready(function () {
                     $(".state").text(prevState);
                     break;
                 case "7":
-                    toSortCounter -= 1;
                     $("#control").text("Управление по месту");
                     document.querySelector(".mainButtons").style.display = "none";
                     document.querySelector("#takeControlButton").style.display = "block";
