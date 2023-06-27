@@ -148,6 +148,7 @@ public class WebController {
                         while(stationModel.getReceivedMessage().nextSetBit(0)!=-1) {
                             Thread.onSpinWait();
                         }
+                        stationModel.setWayReady(false);
                     } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.FIELD) {
                         while (!stationModel.isWayReady()) {
                             Thread.onSpinWait();
