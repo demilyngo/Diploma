@@ -104,7 +104,6 @@ $("#startButton").click(function(e) {
     if (window.EventSource == null) {
         alert('The browser does not support Server-Sent Events');
     } else {
-        console.log(order);
         var eventSource = new EventSource('/start?' + order);
         eventSource.onopen = function () {
             console.log('connection is established');
@@ -152,12 +151,9 @@ $("#startButton").click(function(e) {
 
 $("#takeControlButton").click(function(e) {
     e.preventDefault();
-
-
     if (window.EventSource == null) {
         alert('The browser does not support Server-Sent Events');
     } else {
-        console.log(order);
         var eventSource = new EventSource('/takeControl');
         eventSource.onopen = function () {
             console.log('connection is established');
