@@ -21,16 +21,16 @@ public class WebController {
 
     @GetMapping("/")
     public String greeting(Model model) throws InterruptedException {
-        stationModel.setTryingToLoadPage(true);
-        while(stationModel.isBusy()) {
-            Thread.onSpinWait();
-        }
+        //stationModel.setTryingToLoadPage(true);
+//        while(stationModel.isBusy()) {
+//            Thread.onSpinWait();
+//        }
 
         model.addAttribute("station", stationModel);
         model.addAttribute("cities", stationModel.getCities());
         model.addAttribute("counters", stationModel.getCounters());
         model.addAttribute("wagonList", stationModel.getWagonList());
-        stationModel.setTryingToLoadPage(false);
+        //stationModel.setTryingToLoadPage(false);
         stationModel.sendMessage(49);
         stationModel.sendMessage(17);
         return "index";
