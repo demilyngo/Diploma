@@ -153,8 +153,11 @@ $("#startButton").click(function(e) {
 $("#takeControlButton").click(function(e) {
     e.preventDefault();
     $.ajax({
-        url: 'takeControl',
-        method: 'GET',
+        url: '/takeControl',
+        dataType: 'json',
+        type: 'GET',
+        cache: 'false',
+        contentType: 'application/json',
         success: function () {
             $("#control").text("Управление с АРМ");
             document.querySelector(".mainButtons").style.display = "block";
