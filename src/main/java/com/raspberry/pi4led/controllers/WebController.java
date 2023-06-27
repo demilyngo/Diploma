@@ -51,8 +51,10 @@ public class WebController {
                             var eventBuilder = SseEmitter.event();
                             eventBuilder.id("1").data(stationModel.getCities().get(0));
                             emitter.send(eventBuilder);
-                            stationModel.getReceivedMessage().clear();
-                            continue;
+                            while(stationModel.getReceivedMessage().nextSetBit(0)!=-1) {
+                                Thread.onSpinWait();
+                            }
+//                            continue;
                         }
 
                     }
