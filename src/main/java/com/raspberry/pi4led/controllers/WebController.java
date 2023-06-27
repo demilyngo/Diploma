@@ -173,8 +173,9 @@ public class WebController {
     }
 
     @GetMapping("/takeControl")
-    public void takeControl() {
+    public String takeControl() {
         stationModel.setControl(Control.SERVER);
+        return "/";
     }
 
     @GetMapping("/restart")
