@@ -145,15 +145,15 @@ public class WebController {
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("7").data("Field control").build();
                         emitter.send(eventBuilder);
-                        while(stationModel.getReceivedMessage().nextSetBit(0)!=-1) {
+                        while(!stationModel.getReceivedMessage().isEmpty()) {
                             Thread.onSpinWait();
                         }
-                        stationModel.setWayReady(false);
+                        //stationModel.setWayReady(false);
                     } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.FIELD) {
-                        while (!stationModel.isWayReady()) {
-                            Thread.onSpinWait();
-                        }
-                        stationModel.setWayReady(false);
+//                        while (!stationModel.isWayReady()) {
+//                            Thread.onSpinWait();
+//                        }
+                        //stationModel.setWayReady(false);
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
@@ -165,7 +165,7 @@ public class WebController {
                         eventBuilder = SseEmitter.event();
                         eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
-                        while(stationModel.getReceivedMessage().nextSetBit(0)!=-1) {
+                        while(!stationModel.getReceivedMessage().isEmpty()) {
                             Thread.onSpinWait();
                         }
                     }
