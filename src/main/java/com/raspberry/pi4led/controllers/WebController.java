@@ -147,21 +147,20 @@ public class WebController {
                             eventBuilder.id("7").data("Field control").build();
                             emitter.send(eventBuilder);
 
-                        } else {
+                        } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) != 113){
                             Thread.sleep(200);
-                            if(stationModel.getCurrentWay() != 7) {
-                                var eventBuilder = SseEmitter.event();
-                                eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
-                                emitter.send(eventBuilder);
-                                while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
-                                    Thread.onSpinWait();
-                                }
-                                eventBuilder = SseEmitter.event();
-                                eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
-                                emitter.send(eventBuilder);
-                                while(stationModel.getReceivedMessage().nextSetBit(0) != -1) {
-                                    Thread.onSpinWait();
-                                }
+                            var eventBuilder = SseEmitter.event();
+                            eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
+                            emitter.send(eventBuilder);
+                            while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
+                                Thread.onSpinWait();
+                            }
+
+                            eventBuilder = SseEmitter.event();
+                            eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
+                            emitter.send(eventBuilder);
+                            while(stationModel.getReceivedMessage().nextSetBit(0) != -1) {
+                                Thread.onSpinWait();
                             }
                         }
                         while (stationModel.getReceivedMessage().nextSetBit(0) != -1) {
