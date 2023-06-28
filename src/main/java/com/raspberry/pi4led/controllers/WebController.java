@@ -145,7 +145,7 @@ public class WebController {
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("7").data("Field control").build();
                         emitter.send(eventBuilder);
-                        while(!stationModel.getReceivedMessage().isEmpty()) {
+                        while(!(stationModel.getReceivedMessage().nextSetBit(0) == -1)) {
                             Thread.onSpinWait();
                         }
                         //stationModel.setWayReady(false);
