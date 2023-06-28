@@ -166,6 +166,7 @@ $("#takeControlButton").click(function(e) {
             document.querySelector(".mainButtons").style.display = "block";
             document.querySelector("#takeControlButton").style.display = "none";
             document.querySelector("#overlay").style.display = "none";
+            document.querySelector("#startButton").style.display = "block";
             eventSource.close();
         };
     }
