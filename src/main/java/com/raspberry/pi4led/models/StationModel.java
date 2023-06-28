@@ -264,6 +264,7 @@ public class StationModel {
                     }
                     case 111 -> {
                         if(state == State.WAITING && control == Control.FIELD && !isWagonSorting) {
+                            currentWay = 7;
                             sendMessage(15);
                             state = State.COMING;
                         } else if (control == Control.SERVER) {

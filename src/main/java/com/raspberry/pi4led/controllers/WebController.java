@@ -149,14 +149,15 @@ public class WebController {
 
                         } else {
                             Thread.sleep(200);
-
-                            var eventBuilder = SseEmitter.event();
-                            eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
-                            emitter.send(eventBuilder);
-                            while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
-                                Thread.onSpinWait();
+                            if(stationModel.getCurrentWay() != 7) {
+                                var eventBuilder = SseEmitter.event();
+                                eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
+                                emitter.send(eventBuilder);
+                                while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
+                                    Thread.onSpinWait();
+                                }
                             }
-                            eventBuilder = SseEmitter.event();
+                            var eventBuilder = SseEmitter.event();
                             eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
                             emitter.send(eventBuilder);
                             while(stationModel.getReceivedMessage().nextSetBit(0) != -1) {
