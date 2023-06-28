@@ -150,36 +150,37 @@ public class WebController {
                         }
                         //stationModel.setWayReady(false);
                     } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.FIELD) {
-                        while (!stationModel.isReceiving()) {
+                        while (!stationModel.isWayReady()) {
                             Thread.onSpinWait();
                         }
                         //stationModel.setWayReady(false);
-                        int way = 8;
-                        switch(stationModel.convertReceived(stationModel.getReceivedMessage())) {
-                            case 99 -> {
-                                way = 1;
-                            }
-                            case 101 -> {
-                                way = 2;
-                            }
-                            case 103 -> {
-                                way = 3;
-                            }
-                            case 105 -> {
-                                way = 4;
-                            }
-                            case 107 -> {
-                                way = 5;
-                            }
-                            case 109 -> {
-                                way = 6;
-                            }
-                        }
-                        System.out.println("WAYWAYWAY: " + way);
+//                        int way = 8;
+//                        switch(stationModel.convertReceived(stationModel.getReceivedMessage())) {
+//                            case 99 -> {
+//                                way = 1;
+//                            }
+//                            case 101 -> {
+//                                way = 2;
+//                            }
+//                            case 103 -> {
+//                                way = 3;
+//                            }
+//                            case 105 -> {
+//                                way = 4;
+//                            }
+//                            case 107 -> {
+//                                way = 5;
+//                            }
+//                            case 109 -> {
+//                                way = 6;
+//                            }
+//                        }
+                        System.out.println("WAYWAYWAY: " + stationModel.getCurrentWay());
 
                         var eventBuilder = SseEmitter.event();
-                        eventBuilder.id("8").data(way).build();
+                        eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
+                        stationModel.setWayReady(false);
 //                        stationModel.setWagonSorting(true);
                         while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
                             Thread.onSpinWait();
