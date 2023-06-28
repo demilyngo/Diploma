@@ -11,7 +11,6 @@ public class StationModel {
     private boolean isBusy = false;
     private boolean isTryingToLoadPage = false;
     private boolean isWagonSorting = false;
-    private boolean isWayReady = false;
 
     private final int startBitLength = 1;
     private final int stopBitLength = 1;
@@ -209,7 +208,6 @@ public class StationModel {
                             sendMessage(35); //semaphore way 1
                             sendMessage(3); //rails way 1
                             state = State.SORTING;
-                            isWayReady = true;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
                         }
@@ -220,7 +218,6 @@ public class StationModel {
                             sendMessage(37); //semaphore way 2
                             sendMessage(5); //rails way 2
                             state = State.SORTING;
-                            isWayReady = true;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
                         }
@@ -231,7 +228,6 @@ public class StationModel {
                             sendMessage(39); //semaphore way 3
                             sendMessage(7); //rails way 3
                             state = State.SORTING;
-                            isWayReady = true;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
                         }
@@ -242,7 +238,6 @@ public class StationModel {
                             sendMessage(41); //semaphore way 4
                             sendMessage(9); //rails way 4
                             state = State.SORTING;
-                            isWayReady = true;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
                         }
@@ -253,7 +248,6 @@ public class StationModel {
                             sendMessage(43); //semaphore way 5
                             sendMessage(11); //rails way 5
                             state = State.SORTING;
-                            isWayReady = true;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
                         }
@@ -264,7 +258,6 @@ public class StationModel {
                             sendMessage(45); //semaphore way 6
                             sendMessage(13); //rails way 6
                             state = State.SORTING;
-                            isWayReady = true;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
                         }
@@ -283,7 +276,6 @@ public class StationModel {
                             sendMessage(49); //semaphore to depot
                             sendMessage(17); //rails to depot
                             state = State.LEAVING;
-                            isWayReady = true;
                         } else if (control == Control.SERVER) {
                             control = Control.FIELD;
                         }

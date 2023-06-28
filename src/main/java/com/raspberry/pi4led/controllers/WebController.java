@@ -149,12 +149,10 @@ public class WebController {
 
                         } else {
                             Thread.sleep(200);
-                            System.out.println("WAYWAYWAY: " + stationModel.getCurrentWay());
 
                             var eventBuilder = SseEmitter.event();
                             eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
                             emitter.send(eventBuilder);
-                            stationModel.setWayReady(false);
                             while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
                                 Thread.onSpinWait();
                             }
