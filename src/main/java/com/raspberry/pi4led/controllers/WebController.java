@@ -142,6 +142,9 @@ public class WebController {
                             Thread.onSpinWait();
                         }
                     } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.SERVER) {
+                        while (!stationModel.isWayReady()) {
+                            Thread.onSpinWait();
+                        }
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("7").data("Field control").build();
                         emitter.send(eventBuilder);
