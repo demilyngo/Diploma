@@ -209,12 +209,19 @@ $(document).ready(function () {
                         document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
                         toSortCounter -= 1;
                         $("#toSortCounter").text(toSortCounter);
+                    } else {
+                        document.querySelector(".mainButtons").style.display = "block";
+                        document.querySelector("#takeControlButton").style.display = "none";
+                        document.querySelector("#restartButton").style.display = "block";
                     }
                     $(".map").attr("src", "../images/Map_" + eventField.data + ".png");
                     break;
                 case "9":
                     var cityToAddCounter = $("#" + cities[parseInt(eventField.data, 10) - 1]);
                     cityToAddCounter.text(parseInt(cityToAddCounter.text(), 10) + 1);
+                    if(toSortCounter != 0) {
+                        $(".state").text("Состояние: Отсортировано");
+                    }
                     break;
             }
         };
