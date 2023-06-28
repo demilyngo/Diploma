@@ -145,7 +145,7 @@ public class WebController {
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("7").data("Field control").build();
                         emitter.send(eventBuilder);
-                        while(!(stationModel.getReceivedMessage().nextSetBit(0) == -1)) {
+                        while(stationModel.getReceivedMessage().nextSetBit(0) != -1) {
                             Thread.onSpinWait();
                         }
                         //stationModel.setWayReady(false);
@@ -174,11 +174,9 @@ public class WebController {
                             case 109 -> {
                                 way = 6;
                             }
-                            case 113 -> {
-                                way = 8;
-                            }
                         }
-                        Thread.sleep(100);
+                        System.out.println("WAYWAYWAY: " + way);
+
                         var eventBuilder = SseEmitter.event();
                         eventBuilder.id("8").data(way).build();
                         emitter.send(eventBuilder);
@@ -190,11 +188,11 @@ public class WebController {
                         eventBuilder = SseEmitter.event();
                         eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
                         emitter.send(eventBuilder);
-                        while(!stationModel.getReceivedMessage().isEmpty()) {
+                        while(stationModel.getReceivedMessage().nextSetBit(0) != -1) {
                             Thread.onSpinWait();
                         }
                     }
-                } catch (IOException | InterruptedException e) {
+                } catch (IOException  e) {
                     e.printStackTrace();
                 }
             }
