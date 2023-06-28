@@ -141,7 +141,7 @@ public class WebController {
                         while(stationModel.getReceivedMessage().nextSetBit(0)!=-1) {
                             Thread.onSpinWait();
                         }
-                    } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 ) {
+                    } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && !(stationModel.getState() == State.COMING)) {
                         if(stationModel.getControl() == Control.SERVER) {
                             var eventBuilder = SseEmitter.event();
                             eventBuilder.id("7").data("Field control").build();
