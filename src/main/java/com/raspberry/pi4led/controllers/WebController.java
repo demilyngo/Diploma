@@ -154,9 +154,33 @@ public class WebController {
 //                            Thread.onSpinWait();
 //                        }
                         //stationModel.setWayReady(false);
+                        int way = 8;
+                        switch(stationModel.convertReceived(stationModel.getReceivedMessage())) {
+                            case 99 -> {
+                                way = 1;
+                            }
+                            case 101 -> {
+                                way = 2;
+                            }
+                            case 103 -> {
+                                way = 3;
+                            }
+                            case 105 -> {
+                                way = 4;
+                            }
+                            case 107 -> {
+                                way = 5;
+                            }
+                            case 109 -> {
+                                way = 6;
+                            }
+                            case 113 -> {
+                                way = 8;
+                            }
+                        }
                         Thread.sleep(100);
                         var eventBuilder = SseEmitter.event();
-                        eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
+                        eventBuilder.id("8").data(way).build();
                         emitter.send(eventBuilder);
 //                        stationModel.setWagonSorting(true);
                         while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
