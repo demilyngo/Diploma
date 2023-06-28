@@ -141,58 +141,35 @@ public class WebController {
                         while(stationModel.getReceivedMessage().nextSetBit(0)!=-1) {
                             Thread.onSpinWait();
                         }
-                    } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.SERVER) {
-                        var eventBuilder = SseEmitter.event();
-                        eventBuilder.id("7").data("Field control").build();
-                        emitter.send(eventBuilder);
-                        while(stationModel.getReceivedMessage().nextSetBit(0) != -1) {
-                            Thread.onSpinWait();
-                        }
-                    } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.FIELD) {
-                        while (!stationModel.isWayReady()) {
-                            Thread.onSpinWait();
-                        }
-                        //stationModel.setWayReady(false);
-//                        int way = 8;
-//                        switch(stationModel.convertReceived(stationModel.getReceivedMessage())) {
-//                            case 99 -> {
-//                                way = 1;
-//                            }
-//                            case 101 -> {
-//                                way = 2;
-//                            }
-//                            case 103 -> {
-//                                way = 3;
-//                            }
-//                            case 105 -> {
-//                                way = 4;
-//                            }
-//                            case 107 -> {
-//                                way = 5;
-//                            }
-//                            case 109 -> {
-//                                way = 6;
-//                            }
-//                        }
-                        System.out.println("WAYWAYWAY: " + stationModel.getCurrentWay());
+                    } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 ) {
+                        if(stationModel.getControl() == Control.SERVER) {
+                            var eventBuilder = SseEmitter.event();
+                            eventBuilder.id("7").data("Field control").build();
+                            emitter.send(eventBuilder);
 
-                        var eventBuilder = SseEmitter.event();
-                        eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
-                        emitter.send(eventBuilder);
-                        stationModel.setWayReady(false);
-//                        stationModel.setWagonSorting(true);
-                        while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
-                            Thread.onSpinWait();
+                        } else {
+                            Thread.sleep(200);
+                            System.out.println("WAYWAYWAY: " + stationModel.getCurrentWay());
+
+                            var eventBuilder = SseEmitter.event();
+                            eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
+                            emitter.send(eventBuilder);
+                            stationModel.setWayReady(false);
+                            while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
+                                Thread.onSpinWait();
+                            }
+                            eventBuilder = SseEmitter.event();
+                            eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
+                            emitter.send(eventBuilder);
+                            while(stationModel.getReceivedMessage().nextSetBit(0) != -1) {
+                                Thread.onSpinWait();
+                            }
                         }
-//                        stationModel.setWagonSorting(false);
-                        eventBuilder = SseEmitter.event();
-                        eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
-                        emitter.send(eventBuilder);
-                        while(stationModel.getReceivedMessage().nextSetBit(0) != -1) {
+                        while (stationModel.getReceivedMessage().nextSetBit(0) != -1) {
                             Thread.onSpinWait();
                         }
                     }
-                } catch (IOException  e) {
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
