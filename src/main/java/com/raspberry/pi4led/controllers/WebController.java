@@ -150,9 +150,9 @@ public class WebController {
                         }
                         //stationModel.setWayReady(false);
                     } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) > 97 && stationModel.convertReceived(stationModel.getReceivedMessage()) < 115 && stationModel.getControl() == Control.FIELD) {
-//                        while (!stationModel.isWayReady()) {
-//                            Thread.onSpinWait();
-//                        }
+                        while (!stationModel.isReceiving()) {
+                            Thread.onSpinWait();
+                        }
                         //stationModel.setWayReady(false);
                         int way = 8;
                         switch(stationModel.convertReceived(stationModel.getReceivedMessage())) {
