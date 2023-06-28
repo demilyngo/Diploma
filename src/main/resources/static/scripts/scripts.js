@@ -201,6 +201,7 @@ $(document).ready(function () {
                 case "7":
                     $("#control").text("Управление по месту");
                     document.querySelector(".mainButtons").style.display = "none";
+                    document.querySelector("#startButton").style.display = "none";
                     document.querySelector("#takeControlButton").style.display = "block";
                     document.querySelector("#overlay").style.display = "block";
                     break;
@@ -219,7 +220,7 @@ $(document).ready(function () {
                 case "9":
                     var cityToAddCounter = $("#" + cities[parseInt(eventField.data, 10) - 1]);
                     cityToAddCounter.text(parseInt(cityToAddCounter.text(), 10) + 1);
-                    if(toSortCounter != 0) {
+                    if(toSortCounter == 0) {
                         $(".state").text("Состояние: Отсортировано");
                     }
                     break;
