@@ -205,9 +205,11 @@ $(document).ready(function () {
                     document.querySelector("#overlay").style.display = "block";
                     break;
                 case "8":
-                    document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
-                    toSortCounter -= 1;
-                    $("#toSortCounter").text(toSortCounter);
+                    if(toSortCounter != 0) {
+                        document.querySelector(".wagonItems").removeChild(document.querySelector("#wagonItem" + toSortCounter));
+                        toSortCounter -= 1;
+                        $("#toSortCounter").text(toSortCounter);
+                    }
                     $(".map").attr("src", "../images/Map_" + eventField.data + ".png");
                     break;
                 case "9":

@@ -147,20 +147,22 @@ public class WebController {
                             eventBuilder.id("7").data("Field control").build();
                             emitter.send(eventBuilder);
 
-                        } else if (stationModel.getState() == State.READY || stationModel.getState() == State.SORTING){
+                        } else if (stationModel.getState() == State.READY || stationModel.getState() == State.SORTING || stationModel.getState() == State.SORTED) {
                             Thread.sleep(200);
                             var eventBuilder = SseEmitter.event();
                             eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
                             emitter.send(eventBuilder);
-                            while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
-                                Thread.onSpinWait();
-                            }
+                            if(stationModel.getCurrentWay() != 8) {
+                                while (stationModel.convertReceived(stationModel.getReceivedMessage()) != 65 + 2 * stationModel.getCurrentWay()) {
+                                    Thread.onSpinWait();
+                                }
 
-                            eventBuilder = SseEmitter.event();
-                            eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
-                            emitter.send(eventBuilder);
-                            while(stationModel.getReceivedMessage().nextSetBit(0) != -1) {
-                                Thread.onSpinWait();
+                                eventBuilder = SseEmitter.event();
+                                eventBuilder.id("9").data(stationModel.getCurrentWay()).build();
+                                emitter.send(eventBuilder);
+                                while (stationModel.getReceivedMessage().nextSetBit(0) != -1) {
+                                    Thread.onSpinWait();
+                                }
                             }
                         }
                         while (stationModel.getReceivedMessage().nextSetBit(0) != -1) {
