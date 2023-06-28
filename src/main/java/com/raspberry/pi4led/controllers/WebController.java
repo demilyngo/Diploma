@@ -147,7 +147,7 @@ public class WebController {
                             eventBuilder.id("7").data("Field control").build();
                             emitter.send(eventBuilder);
 
-                        } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) != 113){
+                        } else if (stationModel.convertReceived(stationModel.getReceivedMessage()) != 111){
                             Thread.sleep(200);
                             var eventBuilder = SseEmitter.event();
                             eventBuilder.id("8").data(stationModel.getCurrentWay()).build();
