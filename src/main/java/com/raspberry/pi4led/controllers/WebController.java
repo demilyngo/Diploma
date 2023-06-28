@@ -205,6 +205,7 @@ public class WebController {
         if(!stationModel.getThreadListener().isAlive()) {
             stationModel.getThreadListener().start();
         }
+        stationModel.setControl(Control.SERVER);
         return "redirect:/";
     }
 }
